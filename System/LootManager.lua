@@ -5,6 +5,7 @@ SLASH_Greys2 = "/greys"
 function br._G.SlashCmdList.Greys(msg, editbox)
 	br.SellGreys()
 end
+
 function br.SellGreys()
 	for bag = 0, 4 do
 		for slot = 1, br._G.C_Container.GetContainerNumSlots(bag) do
@@ -26,12 +27,14 @@ function br.SellGreys()
 	br._G.RepairAllItems(0)
 	br.ChatOverlay("Sold Greys.")
 end
+
 -- Dump Greys Macros
 SLASH_DumpGrey1 = "/dumpgreys"
 SLASH_DumpGrey2 = "/dg"
 function br._G.SlashCmdList.DumpGrey(msg, editbox)
 	br.DumpGreys(1)
 end
+
 function br.DumpGreys(Num)
 	local greyTable = {}
 	for bag = 0, 4 do
@@ -43,7 +46,7 @@ function br.DumpGreys(Num)
 					local containerItemInfo = br._G.C_Container.GetContainerItemInfo(bag, slot)
 					local greyPrice = select(11, br._G.GetItemInfo(item)) * containerItemInfo.stackCount
 					if greyPrice > 0 then
-						br._G.tinsert(greyTable, {Bag = bag, Slot = slot, Price = greyPrice, Item = item})
+						br._G.tinsert(greyTable, { Bag = bag, Slot = slot, Price = greyPrice, Item = item })
 					end
 				end
 			end
@@ -65,9 +68,10 @@ function br.DumpGreys(Num)
 		end
 	end
 end
-------------------
+
+-- ----------------
 -- Loot Manager --
-------------------
+-- ----------------
 br.lootManager = {}
 br.lM = br.lootManager
 -- Debug
@@ -77,10 +81,11 @@ function br.lootManager:debug(message)
 		br.lM.oldMessage = message
 	end
 end
+
 -- Check if availables bag slots, return true if at least 1 free bag space
 function br.lootManager:emptySlots()
 	local openSlots = 0
-	for i = 0, 4 do --Let's look at each bag
+	for i = 0, 4 do       --Let's look at each bag
 		local numBagSlots = br._G.C_Container.GetContainerNumSlots(i)
 		if numBagSlots > 0 then -- Only look for slots if bag present
 			openSlots = openSlots + select(1, br._G.C_Container.GetContainerNumFreeSlots(i))
@@ -120,6 +125,7 @@ function br.lootManager:getLoot(lootUnit)
 		return
 	end
 end
+
 -- function br.lootManager:getLoot(lootUnit)
 -- 	local looting = false
 -- 	-- if we have a unit to loot, check if its time to
@@ -180,6 +186,7 @@ function br.lootManager:lootCount()
 	end
 	return lootCount
 end
+
 function br.autoLoot()
 	if br.getOptionCheck("Auto Loot") then
 		--br.player.enemies.get(40)
@@ -190,7 +197,7 @@ function br.autoLoot()
 					if br._G.UnitCastingInfo("player") == nil and br._G.UnitChannelInfo("player") == nil
 						and not br._G.IsMounted("player") and br._G.GetUnitSpeed("player") == 0
 						and br.timer:useTimer("lootTimer", 1) and not br._G.UnitIsDeadOrGhost("player")
-					 then
+					then
 						-- Print("Getting Loot")
 						br.lM:getLoot(br.lM.lootUnit)
 					end

@@ -1,6 +1,6 @@
---------------------------------------------------------------------------------------------------------------------------------
+-- ------------------------------------------------------------------------------------------------------------------------------
 -- unlockList
---------------------------------------------------------------------------------------------------------------------------------
+-- ------------------------------------------------------------------------------------------------------------------------------
 local unlockList =
 {
 	"AcceptBattlefieldPort",
@@ -220,9 +220,9 @@ local globalCacheList =
 }
 
 
---------------------------------------------------------------------------------------------------------------------------------
+-- ------------------------------------------------------------------------------------------------------------------------------
 -- functions exported to BadRotations
---------------------------------------------------------------------------------------------------------------------------------
+-- ------------------------------------------------------------------------------------------------------------------------------
 local _, br = ...
 local b = br._G
 local unlock = br.unlock
@@ -285,9 +285,9 @@ function br.unlock:NNUnlock()
 	if not C_Timer.Nn then return false end
 	setfenv(1, C_Timer.Nn)
 	-- print("NN Api Loaded")
-	--------------------------------
+	-- ------------------------------
 	-- API unlocking
-	--------------------------------
+	-- ------------------------------
 	for k, v in pairs(funcCopies) do
 		b[k] = function(...) return Unlock(k, ...) end
 	end
@@ -300,9 +300,9 @@ function br.unlock:NNUnlock()
 		end
 	end
 
-	--------------------------------
+	-- ------------------------------
 	-- API copy/rename/unlock
-	--------------------------------
+	-- ------------------------------
 	-- b.ReadFile = ReadFile
 	-- b.DirectoryExists = DirectoryExists
 	-- b.WriteFile = WriteFile
@@ -366,9 +366,9 @@ function br.unlock:NNUnlock()
 	end
 
 
-	--------------------------------
+	-- ------------------------------
 	-- API conversions
-	--------------------------------
+	-- ------------------------------
 	b.GetWoWDirectory = function()
 		return "\\scripts"
 	end
@@ -378,7 +378,7 @@ function br.unlock:NNUnlock()
 		return #Objects()
 	end
 	b.GetObjectWithIndex = function(index)
-		return om[index]--ObjectByIndex(index)
+		return om[index] --ObjectByIndex(index)
 	end
 	b.ObjectType = function(...)
 		return ObjectType(...)
@@ -413,7 +413,7 @@ function br.unlock:NNUnlock()
 		return stringsplit(returnFiles, "|")
 	end
 	b.ReadFile = function(...)
-		local path = ...--fixPath(...)
+		local path = ... --fixPath(...)
 		return ReadFile(path)
 	end
 	b.WriteFile = function(...)
@@ -446,9 +446,9 @@ function br.unlock:NNUnlock()
 		return ...
 	end
 	b.IsHackEnabled = function(...) return false end
-	--------------------------------
+	-- ------------------------------
 	-- math
-	--------------------------------
+	-- ------------------------------
 	b.GetDistanceBetweenPositions = function(X1, Y1, Z1, X2, Y2, Z2)
 		return math.sqrt(math.pow(X2 - X1, 2) + math.pow(Y2 - Y1, 2) + math.pow(Z2 - Z1, 2))
 	end
@@ -493,9 +493,9 @@ function br.unlock:NNUnlock()
 		degrees = degrees and b.rad(degrees) / 2 or math.pi / 2
 		return ShortestAngle < degrees
 	end
-	--------------------------------
+	-- ------------------------------
 	-- extra APIs
-	--------------------------------
+	-- ------------------------------
 	b.AuraUtil = {}
 	b.AuraUtil.FindAuraByName = _G.AuraUtil["FindAuraByName"]
 	b.ObjectIsGameObject = function(...)
@@ -505,9 +505,9 @@ function br.unlock:NNUnlock()
 	b.GetMapId = function()
 		return select(8, b.GetInstanceInfo())
 	end
-	--------------------------------
+	-- ------------------------------
 	-- missing APIs
-	--------------------------------
+	-- ------------------------------
 	b.IsQuestObject = function(obj)
 		return false
 	end

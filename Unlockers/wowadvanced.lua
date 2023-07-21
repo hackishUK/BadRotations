@@ -1,6 +1,6 @@
---------------------------------------------------------------------------------------------------------------------------------
+-- ------------------------------------------------------------------------------------------------------------------------------
 -- unlockList
---------------------------------------------------------------------------------------------------------------------------------
+-- ------------------------------------------------------------------------------------------------------------------------------
 local unlockList =
 {
 	"AcceptBattlefieldPort",
@@ -214,9 +214,9 @@ local unlockList =
 	"UseToyByName"
 }
 
---------------------------------------------------------------------------------------------------------------------------------
+-- ------------------------------------------------------------------------------------------------------------------------------
 -- functions exported to BadRotations
---------------------------------------------------------------------------------------------------------------------------------
+-- ------------------------------------------------------------------------------------------------------------------------------
 local _, br = ...
 local b = br._G
 local unlock = br.unlock
@@ -254,16 +254,16 @@ function unlock.WowAdUnlock()
 	if not wa then
 		return false
 	end
-	--------------------------------
+	-- ------------------------------
 	-- API unlocking
-	--------------------------------
+	-- ------------------------------
 	for k, v in pairs(funcCopies) do
 		b[k] = function(...) return wa.CallSecureFunction(v, ...) end
 	end
 
-	--------------------------------
+	-- ------------------------------
 	-- API copy/rename/unlock
-	--------------------------------
+	-- ------------------------------
 	b.ReadFile = wa.ReadFile
 	b.DirectoryExists = wa.DirectoryExists
 	b.WriteFile = wa.WriteFile
@@ -286,10 +286,10 @@ function unlock.WowAdUnlock()
 	b.UnitFacing = wa.UnitFacing
 	b.GetObjectCount = wa.GetObjectCount
 	b.GetNewObjects = wa.GetNewObjects
-	
-	--------------------------------
+
+	-- ------------------------------
 	-- object fields
-	--------------------------------
+	-- ------------------------------
 	b.UnitTarget = function(unit)
 		return wa.ObjectField(unit, 0x1C58, 15)
 	end
@@ -301,10 +301,10 @@ function unlock.WowAdUnlock()
 	end
 	b.UnitCombatReach = function(unit)
 		return wa.ObjectField(unit, 0x1CF0, 10)
-	end	
-	--------------------------------
+	end
+	-- ------------------------------
 	-- API conversions
-	--------------------------------
+	-- ------------------------------
 	b.ObjectPointer = function(...)
 		if b.UnitExists(...) then
 			return b.UnitGUID(...)
@@ -334,7 +334,7 @@ function unlock.WowAdUnlock()
 	b.UnitCastID = function(...)
 		local spellId1 = select(9, b.UnitCastingInfo(...)) or 0
 		local spellId2 = select(9, b.UnitChannelInfo(...)) or 0
-		local castGUID = b.UnitTarget(select(1,...))
+		local castGUID = b.UnitTarget(select(1, ...))
 		return spellId1, spellId2, castGUID, castGUID
 	end
 	b.GetDirectoryFiles = function(...)
@@ -358,10 +358,10 @@ function unlock.WowAdUnlock()
 	b.GetObjectWithGUID = function(...)
 		return ...
 	end
-    b.IsHackEnabled = function(...) return false end
-	--------------------------------
+	b.IsHackEnabled = function(...) return false end
+	-- ------------------------------
 	-- math
-	--------------------------------
+	-- ------------------------------
 	b.GetDistanceBetweenPositions = function(X1, Y1, Z1, X2, Y2, Z2)
 		return math.sqrt(math.pow(X2 - X1, 2) + math.pow(Y2 - Y1, 2) + math.pow(Z2 - Z1, 2))
 	end
@@ -396,7 +396,7 @@ function unlock.WowAdUnlock()
 	b.GetDistanceBetweenObjects = function(unit1, unit2)
 		local X1, Y1, Z1 = b.ObjectPosition(unit1)
 		local X2, Y2, Z2 = b.ObjectPosition(unit2)
-		return math.sqrt((X2-X1)^2 + (Y2-Y1)^2 + (Z2-Z1)^2)
+		return math.sqrt((X2 - X1) ^ 2 + (Y2 - Y1) ^ 2 + (Z2 - Z1) ^ 2)
 	end
 	b.ObjectIsFacing = function(obj1, obj2, degrees)
 		local Facing = b.UnitFacing(obj1)
@@ -406,9 +406,9 @@ function unlock.WowAdUnlock()
 		degrees = degrees and b.rad(degrees) / 2 or math.pi / 2
 		return ShortestAngle < degrees
 	end
-	--------------------------------
+	-- ------------------------------
 	-- extra APIs
-	--------------------------------
+	-- ------------------------------
 	b.AuraUtil = {}
 	b.AuraUtil.FindAuraByName = function(...)
 		return wa.CallSecureFunction(_G.AuraUtil["FindAuraByName"], ...)
@@ -420,23 +420,23 @@ function unlock.WowAdUnlock()
 	b.GetMapId = function()
 		return select(8, GetInstanceInfo())
 	end
-	--------------------------------
+	-- ------------------------------
 	-- missing APIs
-	--------------------------------
+	-- ------------------------------
 	b.IsQuestObject = function(obj)
 		return false
 	end
 	b.ScreenToWorld = function()
 		return 0, 0
 	end
-	--------------------------------
+	-- ------------------------------
 	-- cached functions
-	--------------------------------	
+	-- ------------------------------	
 	b.ObjectExists = wa.createCachedFunction(b.ObjectExists, 1)
 	b.UnitExists = wa.createCachedFunction(b.UnitExists, 1)
 	b.UnitIsVisible = wa.createCachedFunction(b.UnitIsVisible, 1)
 	b.ObjectIsVisible = wa.createCachedFunction(b.ObjectIsVisible, 1)
-	
+
 	b.ObjectPointer = wa.createCachedFunction(b.ObjectPointer, 2)
 	b.UnitGUID = wa.createCachedFunction(b.UnitGUID, 2)
 	b.UnitIsDeadOrGhost = wa.createCachedFunction(b.UnitIsDeadOrGhost, 2)
@@ -453,11 +453,11 @@ function unlock.WowAdUnlock()
 	b.UnitBoundingRadius = wa.createCachedFunction(b.UnitBoundingRadius, 2, true)
 	b.UnitPhaseReason = wa.createCachedFunction(b.UnitPhaseReason, 2, true)
 	b.UnitCreator = wa.createCachedFunction(b.UnitCreator, 2, true)
-	
+
 	b.UnitCastingInfo = wa.createCachedFunction(b.UnitCastingInfo, 3)
 	b.UnitChannelInfo = wa.createCachedFunction(b.UnitChannelInfo, 3)
-	b.UnitCastID = wa.createCachedFunction(b.UnitCastID, 3)	
-	
+	b.UnitCastID = wa.createCachedFunction(b.UnitCastID, 3)
+
 	b.UnitIsUnit = function(unit1, unit2)
 		return b.UnitGUID(unit1) == b.UnitGUID(unit2)
 	end

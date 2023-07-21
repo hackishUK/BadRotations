@@ -89,13 +89,14 @@ function unlock.MBUnlock()
     end
     b.ObjectIsFacing = function(obj1, obj2, toler)
         if b.UnitIsVisible(obj1) and b.UnitIsVisible(obj2) then
-            return (toler and wmbapi.ObjectIsFacing(obj1, obj2, toler)) or (not toler and wmbapi.ObjectIsFacing(obj1, obj2))
+            return (toler and wmbapi.ObjectIsFacing(obj1, obj2, toler)) or
+            (not toler and wmbapi.ObjectIsFacing(obj1, obj2))
         end
     end
     b.ObjectInteract = b.InteractUnit
-    --------------------------------
+    -- ------------------------------
     -- internal unit manager
-    --------------------------------
+    -- ------------------------------
     local const_updateObjectListTickDelay = 10
     local g_lastKnownObjectList = {}
     local g_lastObjectCount = nil
@@ -225,7 +226,7 @@ function unlock.MBUnlock()
         return x, 1 - y
     end
     b.IsQuestObject = function(...)
-        return wmbapi.ObjectIsQuestObjective(...,false)
+        return wmbapi.ObjectIsQuestObjective(..., false)
     end
     br.unlocker = "Minibot"
     unlocked = true

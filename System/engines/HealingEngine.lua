@@ -3,23 +3,26 @@ local _, br = ...
 
 
 
------------------------------------------Bubba's Healing Engine--------------------------------------]]
+-- ---------------------------------------Bubba's Healing Engine--------------------------------------]]
 local LGIST = br._G.LibStub("LibGroupInSpecT-1.1")
 if not br.metaTable1 then
 	-- localizing the commonly used functions while inside loops
-	local getDistance, tinsert, tremove, UnitClass, GetUnitIsUnit = br.getDistance, br._G.tinsert, br._G.tremove, br._G.UnitClass, br.GetUnitIsUnit
+	local getDistance, tinsert, tremove, UnitClass, GetUnitIsUnit = br.getDistance, br._G.tinsert, br._G.tremove,
+		br._G.UnitClass, br.GetUnitIsUnit
 	local UnitHealth, UnitHealthMax = br._G.UnitHealth, br._G.UnitHealthMax
 	local GetTime, UnitDebuffID = br._G.GetTime, br.UnitDebuffID
-	br.friend = {} -- This is our main Table that the world will see
-	br.memberSetup = {} -- This is one of our MetaTables that will be the default user/contructor
-	br.memberSetup.cache = {} -- This is for the cache Table to check against
-	br.metaTable1 = {} -- This will be the MetaTable attached to our Main Table that the world will see
-	br.metaTable1.__call = function(_) -- (_, forceRetable, excludePets, onlyInRange) [Not Implemented]
-		local group = br._G.IsInRaid() and "raid" or "party" -- Determining if the UnitID will be raid or party based
-		local groupSize = br._G.IsInRaid() and br._G.GetNumGroupMembers() or br._G.GetNumGroupMembers() - 1 -- If in raid, we check the entire raid. If in party, we remove one from max to account for the player.
+	br.friend = {}                                                                                    -- This is our main Table that the world will see
+	br.memberSetup = {}                                                                               -- This is one of our MetaTables that will be the default user/contructor
+	br.memberSetup.cache = {}                                                                         -- This is for the cache Table to check against
+	br.metaTable1 = {}                                                                                -- This will be the MetaTable attached to our Main Table that the world will see
+	br.metaTable1.__call = function(_)                                                                -- (_, forceRetable, excludePets, onlyInRange) [Not Implemented]
+		local group = br._G.IsInRaid() and "raid" or "party"                                          -- Determining if the UnitID will be raid or party based
+		local groupSize = br._G.IsInRaid() and br._G.GetNumGroupMembers() or
+		br._G.GetNumGroupMembers() -
+		1                                                                                             -- If in raid, we check the entire raid. If in party, we remove one from max to account for the player.
 		if group == "party" then
 			tinsert(br.friend, br.memberSetup:new("player"))
-		end -- We are creating a new User for player if in a Group
+		end               -- We are creating a new User for player if in a Group
 		for i = 1, groupSize do -- start of the loop to read throught the party/raid
 			local groupUnit = group .. i
 			local groupMember = br.memberSetup:new(groupUnit)
@@ -87,7 +90,7 @@ if not br.metaTable1 then
 		return false
 	end
 	local function CheckCreatureType(tar)
-		local CreatureTypeList = {"Critter", "Totem", "Non-combat Pet", "Wild Pet"}
+		local CreatureTypeList = { "Critter", "Totem", "Non-combat Pet", "Wild Pet" }
 		for i = 1, #CreatureTypeList do
 			if br._G.UnitCreatureType(tar) == CreatureTypeList[i] then
 				return false
@@ -104,15 +107,16 @@ if not br.metaTable1 then
 		if
 			(br.GetUnitIsVisible(tar) and br.GetUnitReaction("player", tar) > 4 and not br.GetUnitIsDeadOrGhost(tar) and br.getLineOfSight("player", tar) and CheckCreatureType(tar) and
 				not br._G.UnitPhaseReason(tar)) and
-				((br.isPlayer(tar) and br._G.UnitIsConnected(tar) and CheckBadDebuff(tar) and not br._G.UnitIsCharmed(tar) and not br._G.UnitIsOtherPlayersPet(tar)) or
-					((GetUnitIsUnit(tar,"pet") or br._G.UnitIsOtherPlayersPet(tar)) and br.getOptionCheck("Heal Pets")) or
-					br.novaEngineTables.SpecialHealUnitList[tonumber(select(2, br.getGUID(tar)))] ~= nil)
-		 then
+			((br.isPlayer(tar) and br._G.UnitIsConnected(tar) and CheckBadDebuff(tar) and not br._G.UnitIsCharmed(tar) and not br._G.UnitIsOtherPlayersPet(tar)) or
+				((GetUnitIsUnit(tar, "pet") or br._G.UnitIsOtherPlayersPet(tar)) and br.getOptionCheck("Heal Pets")) or
+				br.novaEngineTables.SpecialHealUnitList[tonumber(select(2, br.getGUID(tar)))] ~= nil)
+		then
 			return true
 		else
 			return false
 		end
 	end
+
 	function br.memberSetup:new(unit)
 		-- Seeing if we have already cached this unit before
 		if br.memberSetup.cache[br.getGUID(unit)] then
@@ -255,15 +259,15 @@ if not br.metaTable1 then
 				local _, _, count, _, _, _, _, _, _, SpellID = br._G.UnitAura(o.unit, i, "HELPFUL|HARMFUL")
 				local debuffID = br.novaEngineTables.SpecificHPDebuffs[SpellID]
 				if debuffID ~= nil then
-				  for i = 1, #debuffID do
-					  local debuffData = debuffID[i]
-					  if debuffData ~= nil and (debuffData.stacks == nil or (count and count >= debuffData.stacks)) then
-						  PercentWithIncoming = PercentWithIncoming - debuffData.value
-						  break
-					  end
-				  end
-			  end
-      end
+					for i = 1, #debuffID do
+						local debuffData = debuffID[i]
+						if debuffData ~= nil and (debuffData.stacks == nil or (count and count >= debuffData.stacks)) then
+							PercentWithIncoming = PercentWithIncoming - debuffData.value
+							break
+						end
+					end
+				end
+			end
 			local elapsedDebugTime = GetTime() - debugTimerStartTime
 			if elapsedDebugTime > 0.5 then
 				br._G.print("WARNING: Debuff Scan took a long time: " .. elapsedDebugTime .. " Seconds")
@@ -271,13 +275,16 @@ if not br.metaTable1 then
 			if br.getOptionCheck("Blacklist") == true and br.data.blackList ~= nil then
 				for i = 1, #br.data.blackList do
 					if o.guid == br.data.blackList[i].guid then
-						PercentWithIncoming, ActualWithIncoming, nAbsorbs = PercentWithIncoming + br.getValue("Blacklist"), ActualWithIncoming + br.getValue("Blacklist"), nAbsorbs + br.getValue("Blacklist")
+						PercentWithIncoming, ActualWithIncoming, nAbsorbs =
+						PercentWithIncoming + br.getValue("Blacklist"), ActualWithIncoming + br.getValue("Blacklist"),
+							nAbsorbs + br.getValue("Blacklist")
 						break
 					end
 				end
 			end
 			return PercentWithIncoming, ActualWithIncoming, nAbsorbs
 		end
+
 		-- returns unit GUID
 		function o:nGUID()
 			local nShortHand = ""
@@ -288,6 +295,7 @@ if not br.metaTable1 then
 			end
 			return targetGUID, nShortHand
 		end
+
 		-- Returns unit class
 		function o:GetClass()
 			if br._G.UnitGroupRolesAssigned(o.unit) == "NONE" then
@@ -301,6 +309,7 @@ if not br.metaTable1 then
 				return UnitClass(o.unit)
 			end
 		end
+
 		-- return unit role
 		function o:GetRole()
 			if br._G.UnitGroupRolesAssigned(o.unit) == "NONE" then
@@ -308,7 +317,7 @@ if not br.metaTable1 then
 				if br.novaEngineTables.roleTable[br._G.UnitName(o.unit)] ~= nil then
 					return br.novaEngineTables.roleTable[br._G.UnitName(o.unit)].role
 				else
----@diagnostic disable-next-line: undefined-field
+					-- -@diagnostic disable-next-line: undefined-field
 					local info = LGIST:GetCachedInfo(br.getGUID(o.unit))
 					if info and info.spec_role then
 						return info.spec_role
@@ -318,6 +327,7 @@ if not br.metaTable1 then
 				return br._G.UnitGroupRolesAssigned(o.unit)
 			end
 		end
+
 		-- sets actual position of unit in engine, shouldnt refresh more than once/sec
 		function o:GetPosition()
 			if br.GetUnitIsVisible(o.unit) then
@@ -331,6 +341,7 @@ if not br.metaTable1 then
 				return 0, 0, 0
 			end
 		end
+
 		-- Group Number of Player: getUnitGroupNumber(1)
 		function o:getUnitGroupNumber()
 			-- check if in raid
@@ -339,6 +350,7 @@ if not br.metaTable1 then
 			end
 			return 0
 		end
+
 		-- Unit distance to player
 		function o:getUnitDistance()
 			if GetUnitIsUnit("player", o.unit) then
@@ -346,6 +358,7 @@ if not br.metaTable1 then
 			end
 			return getDistance("player", o.unit)
 		end
+
 		-- Updating the values of the Unit
 		function o:UpdateUnit()
 			if br.isChecked("Debug Timers") then
@@ -461,14 +474,16 @@ if not br.metaTable1 then
 			-- add unit to setup cache
 			br.memberSetup.cache[select(2, br.getGUID(o.unit))] = o -- Add unit to SetupTable
 		end
+
 		-- Adding the user and functions we just created to this cached version in case we need it again
 		-- This will also serve as a good check for if the unit is already in the table easily
 		--Print(UnitName(unit), select(2, br.getGUID(unit)))
 		br.memberSetup.cache[select(2, o:nGUID())] = o
 		return o
 	end
+
 	-- Setting up the tables on either Wipe or Initial Setup
-	function br.SetupTables() -- Creating the cache (we use this to check if some1 is already in the table)
+	function br.SetupTables()            -- Creating the cache (we use this to check if some1 is already in the table)
 		setmetatable(br.friend, br.metaTable1) -- Set the metaTable of Main to Meta
 		function br.friend:Update()
 			-- Print("HEAL PULSE: "..GetTime())		-- debug Print to check update time
@@ -476,13 +491,13 @@ if not br.metaTable1 then
 			local selectedMode, SpecialTargets = br.getOptionValue("Special Heal"), {}
 			if br.getOptionCheck("Special Heal") == true then
 				if selectedMode == 1 then
-					SpecialTargets = {"target"}
+					SpecialTargets = { "target" }
 				elseif selectedMode == 2 then
-					SpecialTargets = {"target", "mouseover"}
+					SpecialTargets = { "target", "mouseover" }
 				elseif selectedMode == 3 then
-					SpecialTargets = {"target", "mouseover", "focus"}
+					SpecialTargets = { "target", "mouseover", "focus" }
 				else
-					SpecialTargets = {"target", "focus"}
+					SpecialTargets = { "target", "focus" }
 				end
 			end
 			for p = 1, #SpecialTargets do
@@ -506,7 +521,8 @@ if not br.metaTable1 then
 							end
 						end
 						tinsert(br.friend, SpecialCase)
-						br.novaEngineTables.SavedSpecialTargets[SpecialTargets[p]] = select(2, br.getGUID(SpecialTargets[p]))
+						br.novaEngineTables.SavedSpecialTargets[SpecialTargets[p]] = select(2,
+							br.getGUID(SpecialTargets[p]))
 					end
 				end
 			end
@@ -584,9 +600,11 @@ if not br.metaTable1 then
 			end
 			-- update these frames to current br.friend values via a pulse in nova engine
 		end
+
 		-- We are creating the initial Main Table
 		br.friend()
 	end
+
 	-- We are setting up the Tables for the first time
 	br.SetupTables()
 end

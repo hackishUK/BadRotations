@@ -55,7 +55,7 @@ function br.pulseNovaDebug()
 	local DiesalGUI = br._G.LibStub("DiesalGUI-1.0")
 	function br.ui:createBar(parent, option, unit, tooltip, tooltipSpin)
 		local value, text, statusMin, statusMax = option.name, option.status, option.statusMin, option.statusMax
----@diagnostic disable-next-line: undefined-field
+		-- -@diagnostic disable-next-line: undefined-field
 		local newHPBar = DiesalGUI:Create("Bar")
 		parent = parent or {}
 		--print(newHPBar)
@@ -116,18 +116,18 @@ function br.pulseNovaDebug()
 			newHPBar:SetEventListener(
 				"OnEnter",
 				function(this, event)
----@diagnostic disable-next-line: undefined-field
+					-- -@diagnostic disable-next-line: undefined-field
 					br._G.GameTooltip:SetOwner(br._G.Minimap, "ANCHOR_CURSOR", 50, 50)
----@diagnostic disable-next-line: undefined-field
+					-- -@diagnostic disable-next-line: undefined-field
 					br._G.GameTooltip:SetText(tooltip, 214 / 255, 25 / 255, 25 / 255)
----@diagnostic disable-next-line: undefined-field
+					-- -@diagnostic disable-next-line: undefined-field
 					br._G.GameTooltip:Show()
 				end
 			)
 			newHPBar:SetEventListener(
 				"OnLeave",
 				function(this, event)
----@diagnostic disable-next-line: undefined-field
+					-- -@diagnostic disable-next-line: undefined-field
 					br._G.GameTooltip:Hide()
 				end
 			)
@@ -146,7 +146,8 @@ function br.pulseNovaDebug()
 		height = height or 22
 		if br._G[parent .. value .. "Nova"] == nil then
 			local scale = 1 --br.data.settings.optionsFrame.scale or 1
-			_G[parent .. value .. "Nova"] = br._G.CreateFrame("StatusBar", br._G[parent .. value .. "Nova"], br._G.UIParent, "BackdropTemplate")
+			_G[parent .. value .. "Nova"] = br._G.CreateFrame("StatusBar", br._G[parent .. value .. "Nova"],
+				br._G.UIParent, "BackdropTemplate")
 			_G[parent .. value .. "Nova"]:SetWidth(width * scale)
 			_G[parent .. value .. "Nova"]:SetHeight(height * scale)
 			_G[parent .. value .. "Nova"]:SetPoint("TOPLEFT", x * scale, (y - 2) * scale)
@@ -161,7 +162,7 @@ function br.pulseNovaDebug()
 			_G[parent .. value .. "Nova"]:SetScript(
 				"OnEnter",
 				function(self)
----@diagnostic disable-next-line: undefined-field
+					-- -@diagnostic disable-next-line: undefined-field
 					br._G.GameTooltip:SetOwner(self, "BOTTOMLEFT", 225, 5)
 					local thisUnit = br.friend[value]
 					if thisUnit then
@@ -171,16 +172,19 @@ function br.pulseNovaDebug()
 								color = "|cff" .. br.classColors[i].hex
 							end
 						end
----@diagnostic disable-next-line: undefined-field
+						-- -@diagnostic disable-next-line: undefined-field
 						br._G.GameTooltip:SetText(
-							color .. "Name: " .. thisUnit.name .. "\n|cffFF1100Health: " .. math.floor(thisUnit.hp) .. "\n|cff11A7DFRole: " .. thisUnit.role,
+							color ..
+							"Name: " ..
+							thisUnit.name ..
+							"\n|cffFF1100Health: " .. math.floor(thisUnit.hp) .. "\n|cff11A7DFRole: " .. thisUnit.role,
 							nil,
 							nil,
 							nil,
 							nil,
 							true
 						)
----@diagnostic disable-next-line: undefined-field
+						-- -@diagnostic disable-next-line: undefined-field
 						br._G.GameTooltip:Show()
 					end
 				end
@@ -189,7 +193,7 @@ function br.pulseNovaDebug()
 			_G[parent .. value .. "Nova"]:SetScript(
 				"OnLeave",
 				function(self)
----@diagnostic disable-next-line: undefined-field
+					-- -@diagnostic disable-next-line: undefined-field
 					br._G.GameTooltip:Hide()
 				end
 			)
@@ -205,7 +209,8 @@ function br.pulseNovaDebug()
 				end
 			)
 			-- text
-			_G[parent .. value .. "NovaText"] = br._G[parent .. value .. "Nova"]:CreateFontString(_G[parent .. value .. "NovaText"], "ARTWORK")
+			_G[parent .. value .. "NovaText"] = br._G[parent .. value .. "Nova"]:CreateFontString(
+			_G[parent .. value .. "NovaText"], "ARTWORK")
 			_G[parent .. value .. "NovaText"]:SetWidth(width * scale)
 			_G[parent .. value .. "NovaText"]:SetHeight(height * scale)
 			_G[parent .. value .. "NovaText"]:SetPoint("CENTER", 0, -2)
@@ -219,6 +224,7 @@ function br.pulseNovaDebug()
 			br.nNovaDebug[#br.nNovaDebug + 1] = parent .. value .. "Nova"
 		end
 	end
+
 	local novaUnits = #br.friend
 	if novaUnits > 5 then
 		novaUnits = 5
@@ -245,7 +251,7 @@ function br.pulseNovaDebug()
 		-- frameCreation("healingDebug",200,150,"|cffFF001Ebr.friend")
 		-- br.ui:createHealingWindow()
 		for i = 1, 5 do
-			local thisOption = {name = i, status = 100, statusMin = 0, statusMax = 100, unit = "thisUnit"}
+			local thisOption = { name = i, status = 100, statusMin = 0, statusMax = 100, unit = "thisUnit" }
 			-- br.ui.window.healing:AddMessage(thisOption)
 			br.createNovaStatusBar("healing", thisOption, 10, -i * 25, 180, 20)
 			--br.ui:createBar("healing", thisOption, thisOption.unit, tooltip, tooltipSpin)
@@ -276,7 +282,8 @@ function br.pulseNovaDebug()
 			_G[thisDebugRow]:SetValue(thisUnit.hp)
 			_G[thisDebugRow .. "Text"]:SetText(math.floor(thisUnit.hp))
 			if br.classColors[class] ~= nil then
-				_G[thisDebugRow]:SetStatusBarTexture(br.classColors[class].R, br.classColors[class].G, br.classColors[class].B)
+				_G[thisDebugRow]:SetStatusBarTexture(br.classColors[class].R, br.classColors[class].G,
+					br.classColors[class].B)
 			else
 				_G[thisDebugRow]:SetStatusBarTexture(1, 1, 1)
 			end

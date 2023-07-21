@@ -1,6 +1,6 @@
---------------------------------------------------------------------------------------------------------------------------------
+-- ------------------------------------------------------------------------------------------------------------------------------
 -- unlockList
---------------------------------------------------------------------------------------------------------------------------------
+-- ------------------------------------------------------------------------------------------------------------------------------
 local unlockList =
 {
 	"AcceptBattlefieldPort",
@@ -212,9 +212,9 @@ local unlockList =
 	"UseToyByName"
 }
 
---------------------------------------------------------------------------------------------------------------------------------
+-- ------------------------------------------------------------------------------------------------------------------------------
 -- functions exported to BadRotations
---------------------------------------------------------------------------------------------------------------------------------
+-- ------------------------------------------------------------------------------------------------------------------------------
 local _, br = ...
 local b = br._G
 local unlock = br.unlock
@@ -223,60 +223,60 @@ local funcCopies = {}
 
 -- helper function
 local function stringsplit(inputstr, sep)
-    if sep == nil then
-        sep = "%s"
-    end
-    local t = {}
-    for str in string.gmatch(inputstr, "([^" .. sep .. "]+)") do
-        table.insert(t, str)
-    end
-    return t
+	if sep == nil then
+		sep = "%s"
+	end
+	local t = {}
+	for str in string.gmatch(inputstr, "([^" .. sep .. "]+)") do
+		table.insert(t, str)
+	end
+	return t
 end
 
 -- make a backup copy of all APIs before AddOns hook them
 for i = 1, #unlockList do
-    local func = unlockList[i]
-    funcCopies[func] = func --_G[func]
+	local func = unlockList[i]
+	funcCopies[func] = func --_G[func]
 end
 local Unlocker = ...
 local File
 function unlock.TinkrUnlock()
 	if not tinkrUnlocked then
-        if Unlocker and Unlocker.name == "Tinkr" then
-            tinkrUnlocked = true
+		if Unlocker and Unlocker.name == "Tinkr" then
+			tinkrUnlocked = true
 			File = Unlocker.Util.File
-        else
-            return false
-        end
-    end
+		else
+			return false
+		end
+	end
 
-    --------------------------------
+	-- ------------------------------
 	-- API unlocking
-	--------------------------------
+	-- ------------------------------
 	for k, v in pairs(funcCopies) do
 		b[k] = function(...)
 			if select('#', ...) == 0 then
-				return Eval(k.."()", "")
+				return Eval(k .. "()", "")
 			else
-				return Eval(k.."("..table.concat({...}, ", ")..")", "")
+				return Eval(k .. "(" .. table.concat({ ... }, ", ") .. ")", "")
 			end
 		end
 	end
 
-    -------------------
+	-- -----------------
 	-- API Wrapping ---
-	-------------------
-	------------------------- Active Player -------------------
+	-- -----------------
+	-- ----------------------- Active Player -------------------
 	b.FaceDirection = function(arg)
 		if type(arg) == "number" then
-			FaceDirection(arg,true)
+			FaceDirection(arg, true)
 		else
 			arg = b.GetAnglesBetweenObjects("player", arg)
-			FaceDirection(arg,true)
+			FaceDirection(arg, true)
 		end
 	end
 	b.GetMapId = GetMapID
-	------------------------- Object --------------------------
+	-- ----------------------- Object --------------------------
 	b.ObjectPointer = ObjectGUID
 	b.ObjectExists = function(...) return Object(...) ~= nil end
 	b.ObjectIsVisible = function(...) return Object(...) ~= nil end
@@ -324,7 +324,7 @@ function unlock.TinkrUnlock()
 	b.GetDistanceBetweenObjects = function(unit1, unit2)
 		local X1, Y1, Z1 = b.ObjectPosition(unit1)
 		local X2, Y2, Z2 = b.ObjectPosition(unit2)
-		return math.sqrt((X2-X1)^2 + (Y2-Y1)^2 + (Z2-Z1)^2)
+		return math.sqrt((X2 - X1) ^ 2 + (Y2 - Y1) ^ 2 + (Z2 - Z1) ^ 2)
 	end
 	b.ObjectIsFacing = function(obj1, obj2, degrees)
 		local Facing = b.UnitFacing(obj1)
@@ -337,7 +337,7 @@ function unlock.TinkrUnlock()
 	b.IsQuestObject = function(obj)
 		return false
 	end
-	------------------------- Object Manager ------------------
+	-- ----------------------- Object Manager ------------------
 	local om = {}
 	b.GetObjectCount = function()
 		table.wipe(om)
@@ -350,14 +350,14 @@ function unlock.TinkrUnlock()
 	b.GetObjectWithGUID = function(...)
 		return ...
 	end
-	------------------------- Unit ------------------
+	-- ----------------------- Unit ------------------
 	b.UnitCreator = ObjectCreator
 	b.UnitMovementFlags = ObjectMovementFlag
 	b.UnitBoundingRadius = ObjectBoundingRadius
 	b.UnitCombatReach = ObjectCombatReach
 	b.UnitTarget = ObjectTarget
 	b.UnitCastID = ObjectCastingInfo
-	------------------------- World ---------------------------
+	-- ----------------------- World ---------------------------
 	b.TraceLine = TraceLine
 	b.GetCameraPosition = CameraPosition
 	b.CancelPendingSpell = b.SpellStopTargeting
@@ -375,7 +375,7 @@ function unlock.TinkrUnlock()
 		local mx, my, mz = Common.ScreenToWorld(GetCursorPosition())
 		return mx, my, mz
 	end
-	------------------------- File ----------------------------
+	-- ----------------------- File ----------------------------
 	b.GetDirectoryFiles = function(...)
 		local filter = stringsplit(..., "*")
 		local dirFiles = File:List(filter[1])
@@ -408,11 +408,11 @@ function unlock.TinkrUnlock()
 	b.GetWoWDirectory = function()
 		return "scripts"
 	end
-	------------------------- Miscellaneous -------------------
+	-- ----------------------- Miscellaneous -------------------
 	b.GetKeyState = GetKeyState
 	b.UnitFacing = b.ObjectFacing
 	b.ObjectInteract = b.InteractUnit
-    b.IsHackEnabled = function(...) return false end
+	b.IsHackEnabled = function(...) return false end
 	b.AuraUtil = {}
 	b.AuraUtil.FindAuraByName = function(name, unit, filter)
 		-- return Eval("AuraUtil.FindAuraByName("..table.concat({...}, ", ")..")", "")
@@ -423,10 +423,10 @@ function unlock.TinkrUnlock()
 		return ObjType == 8 or ObjType == 11
 	end
 	b.RunMacroText = function(text)
-		return Eval("RunMacroText(\""..text.."\")", "")
+		return Eval("RunMacroText(\"" .. text .. "\")", "")
 	end
 	b.UseItemByName = function(text)
-		return Eval("UseItemByName(\""..text.."\")", "")
+		return Eval("UseItemByName(\"" .. text .. "\")", "")
 	end
 	b.TargetUnit = function(unit)
 		if Object(unit) then
@@ -442,11 +442,11 @@ function unlock.TinkrUnlock()
 			return
 		end
 	end
-	------------------------------------------
-	--- API - Unit Function Object Handler ---
-	------------------------------------------
+	-- ----------------------------------------
+	-- - API - Unit Function Object Handler ---
+	-- ----------------------------------------
 	b.CastSpellByName = function(spell, unit)
-		return Eval("CastSpellByName(\""..spell.."\", \""..ObjectUnit(unit).."\")", "")
+		return Eval("CastSpellByName(\"" .. spell .. "\", \"" .. ObjectUnit(unit) .. "\")", "")
 	end
 	b.GetRaidTargetIndex = function(...)
 		return GetRaidTargetIndex(ObjectUnit(...))
@@ -500,7 +500,7 @@ function unlock.TinkrUnlock()
 		return UnitGetIncomingHeals(ObjectUnit(unit1), ObjectUnit(unit2))
 	end
 	b.UnitGUID = function(...)
-		return ObjectGUID(...)--UnitGUID(ObjectUnit(...))
+		return ObjectGUID(...) --UnitGUID(ObjectUnit(...))
 	end
 	b.UnitHealth = function(...)
 		return UnitHealth(ObjectUnit(...))
@@ -562,7 +562,7 @@ function unlock.TinkrUnlock()
 	b.UnitRace = function(...)
 		return UnitRace(ObjectUnit(...))
 	end
-	b.UnitReaction = function (unit1, unit2)
+	b.UnitReaction = function(unit1, unit2)
 		return UnitReaction(ObjectUnit(unit1), ObjectUnit(unit2))
 	end
 	b.UnitStat = function(unit, statIndex)
@@ -578,6 +578,6 @@ function unlock.TinkrUnlock()
 		return UnitIsTrivial(ObjectUnit(...))
 	end
 
-    br.unlocker = "Tinkr"
+	br.unlocker = "Tinkr"
 	return true
 end

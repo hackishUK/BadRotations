@@ -2,9 +2,9 @@ local DiesalGUI = _G.LibStub("DiesalGUI-1.0")
 local DiesalTools = _G.LibStub("DiesalTools-1.0")
 local _, br = ...
 function br.ui:createDropdown(parent, text, itemlist, default, tooltip, tooltipDrop, hideCheckbox)
-    -------------------------------
-    ----Need to calculate Y Pos----
-    -------------------------------
+    -- -----------------------------
+    -- --Need to calculate Y Pos----
+    -- -----------------------------
     local Y = -5
     for i = 1, #parent.children do
         if parent.children[i].type ~= "Spinner" and parent.children[i].type ~= "Dropdown" then
@@ -13,9 +13,9 @@ function br.ui:createDropdown(parent, text, itemlist, default, tooltip, tooltipD
     end
     Y = DiesalTools.Round(Y)
 
-    -------------------------------
-    --------Create CheckBox--------
-    -------------------------------
+    -- -----------------------------
+    -- ------Create CheckBox--------
+    -- -----------------------------
     local checkBox = br.ui:createCheckbox(parent, text, tooltip)
     if hideCheckbox then
         local check = br.data.settings[br.selectedSpec][br.selectedProfile][text .. "Check"]
@@ -31,11 +31,11 @@ function br.ui:createDropdown(parent, text, itemlist, default, tooltip, tooltipD
         checkBox:Disable()
         checkBox:ReleaseTextures()
     end
-    -------------------------------
+    -- -----------------------------
 
-    -------------------------------
-    --------Create Dropdown--------
-    -------------------------------
+    -- -----------------------------
+    -- ------Create Dropdown--------
+    -- -----------------------------
     local newDropdown = DiesalGUI:Create("Dropdown")
     local default = default or 1
     parent:AddChild(newDropdown)
@@ -45,9 +45,9 @@ function br.ui:createDropdown(parent, text, itemlist, default, tooltip, tooltipD
     newDropdown:SetHeight(12)
     newDropdown:SetList(itemlist)
 
-    --------------
-    ---BR Stuff---
-    --------------
+    -- ------------
+    -- -BR Stuff---
+    -- ------------
     -- Read from config or set default
     if br.data.settings[br.selectedSpec][br.selectedProfile][text .. "Drop"] == nil then
         br.data.settings[br.selectedSpec][br.selectedProfile][text .. "Drop"] = default
@@ -62,9 +62,9 @@ function br.ui:createDropdown(parent, text, itemlist, default, tooltip, tooltipD
     local value = br.data.settings[br.selectedSpec][br.selectedProfile][text .. "Drop"]
     newDropdown:SetValue(value)
 
-    ------------------
-    ------Events------
-    ------------------
+    -- ----------------
+    -- ----Events------
+    -- ----------------
     -- Event: OnClick
     local main_window = parent.content
     if main_window:GetParent() ~= UIParent then
@@ -84,7 +84,7 @@ function br.ui:createDropdown(parent, text, itemlist, default, tooltip, tooltipD
             self.dropdown:SetFrameStrata(strata)
         end
     end)
-    
+
     -- Event: OnValueChange
     newDropdown:SetEventListener(
         "OnValueChanged",
@@ -111,13 +111,13 @@ function br.ui:createDropdown(parent, text, itemlist, default, tooltip, tooltipD
         )
     end
 
-    ----------------------
-    ------END Events------
-    ----------------------
+    -- --------------------
+    -- ----END Events------
+    -- --------------------
     newDropdown:ApplySettings()
-    ----------------------------
-    --------END Dropdown--------
-    ----------------------------
+    -- --------------------------
+    -- ------END Dropdown--------
+    -- --------------------------
 
     return newDropdown, checkBox
 end
@@ -127,9 +127,9 @@ function br.ui:createDropdownWithout(parent, text, itemlist, default, tooltip, t
 end
 
 function br.ui:createProfileDropdown(parent)
-    -------------------------------
-    ----Need to calculate Y Pos----
-    -------------------------------
+    -- -----------------------------
+    -- --Need to calculate Y Pos----
+    -- -----------------------------
     local Y = -5
     for i = 1, #parent.children do
         if parent.children[i].type ~= "Spinner" and parent.children[i].type ~= "Dropdown" then
@@ -138,7 +138,7 @@ function br.ui:createProfileDropdown(parent)
     end
     Y = DiesalTools.Round(Y)
 
-    local profiles = br.fetch(br.selectedSpec .. "_" .. "profiles", {{key = "default", text = "Default"}})
+    local profiles = br.fetch(br.selectedSpec .. "_" .. "profiles", { { key = "default", text = "Default" } })
     -- local selectedProfile = br.fetch(br.selectedSpec .. "_" .. "profile", "default")
     local profile_drop = DiesalGUI:Create("Dropdown")
     parent:AddChild(profile_drop)

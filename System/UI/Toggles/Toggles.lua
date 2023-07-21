@@ -2,9 +2,9 @@ local _, br = ...
 -- this handles old profiles buttons
 function br.TogglesFrame()
 	br.GarbageButtons()
-	---------------------------
+	-- -------------------------
 	--     Main Button       --
-	---------------------------
+	-- -------------------------
 	-- Default Values
 	br.emptyIcon = [[Interface\FrameGeneral\UI-Background-Marble]]
 	br.backIconOn = [[Interface\ICONS\Spell_Holy_PowerWordShield]]
@@ -41,8 +41,8 @@ function br.TogglesFrame()
 	-- Set Main Button
 	if
 		br.data.settings[br.selectedSpec] ~= nil and br.data.settings[br.selectedSpec].toggles ~= nil and
-			br.data.settings[br.selectedSpec].toggles["Power"] == 1
-	 then
+		br.data.settings[br.selectedSpec].toggles["Power"] == 1
+	then
 		br.mainButton:SetNormalTexture(br.backIconOn)
 	else
 		br.mainButton:SetNormalTexture(br.backIconOff)
@@ -134,7 +134,7 @@ function br.TogglesFrame()
 	)
 	br.mainButton:SetScript(
 		"OnMouseWheel",
-		function(_,delta)
+		function(_, delta)
 			if br._G.IsLeftAltKeyDown() then
 				local Go = false
 				if delta < 0 and br.data.settings["buttonSize"] > 1 then

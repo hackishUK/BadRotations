@@ -7,9 +7,9 @@ function br.ui:createCheckbox(parent, text, tooltip, checked)
     local classColor = {
         color = br.classColors[select(3, br._G.UnitClass("player"))].hex
     }
-    -------------------------------
-    ----Need to calculate Y Pos----
-    -------------------------------
+    -- -----------------------------
+    -- --Need to calculate Y Pos----
+    -- -----------------------------
     local Y = -5
     for i = 1, #parent.children do
         if parent.children[i].type ~= "Spinner" and parent.children[i].type ~= "Dropdown" then
@@ -18,15 +18,15 @@ function br.ui:createCheckbox(parent, text, tooltip, checked)
     end
     Y = DiesalTools.Round(Y)
 
-    ----------------------------
-    --------Create Label--------
-    ----------------------------
+    -- --------------------------
+    -- ------Create Label--------
+    -- --------------------------
     br.ui:createText(parent, text, true)
-    ----------------------------
+    -- --------------------------
 
-    -------------------------------
-    --------Create CheckBox--------
-    -------------------------------
+    -- -----------------------------
+    -- ------Create CheckBox--------
+    -- -----------------------------
     local checkBox = DiesalGUI:Create("CheckBox")
 
     checkBox:SetParent(parent.content)
@@ -37,9 +37,9 @@ function br.ui:createCheckbox(parent, text, tooltip, checked)
             width = 12
         }
     )
-    --------------
-    ---BR Stuff---
-    --------------
+    -- ------------
+    -- -BR Stuff---
+    -- ------------
     -- Read check value from config, false if nothing found
     -- Set default
     if br.data.settings[br.selectedSpec][br.selectedProfile][text .. "Check"] == nil and not checked then
@@ -68,9 +68,9 @@ function br.ui:createCheckbox(parent, text, tooltip, checked)
     if check == true then
         checkBox:SetChecked(true)
     end
-    ------------------
-    ------Events------
-    ------------------
+    -- ----------------
+    -- ----Events------
+    -- ----------------
     -- Event: OnValueChanged
     checkBox:SetEventListener(
         "OnValueChanged",
@@ -102,15 +102,15 @@ function br.ui:createCheckbox(parent, text, tooltip, checked)
             end
         )
     end
-    ----------------------
-    ------END Events------
-    ----------------------
+    -- --------------------
+    -- ----END Events------
+    -- --------------------
 
     DiesalStyle:StyleTexture(checkBox.check, classColor)
     checkBox:ApplySettings()
-    ----------------------------
-    --------END CheckBox--------
-    ----------------------------
+    -- --------------------------
+    -- ------END CheckBox--------
+    -- --------------------------
     parent:AddChild(checkBox)
 
     return checkBox

@@ -2,9 +2,9 @@ local DiesalGUI = _G.LibStub("DiesalGUI-1.0")
 local DiesalTools = _G.LibStub("DiesalTools-1.0")
 local _, br = ...
 function br.ui:createSpinner(parent, text, number, min, max, step, tooltip, tooltipSpin, hideCheckbox)
-    -------------------------------
-    ----Need to calculate Y Pos----
-    -------------------------------
+    -- -----------------------------
+    -- --Need to calculate Y Pos----
+    -- -----------------------------
     local Y = -5
     for i = 1, #parent.children do
         if parent.children[i].type ~= "Spinner" and parent.children[i].type ~= "Dropdown" then
@@ -13,9 +13,9 @@ function br.ui:createSpinner(parent, text, number, min, max, step, tooltip, tool
     end
     Y = DiesalTools.Round(Y)
 
-    -------------------------------
-    --------Create CheckBox--------
-    -------------------------------
+    -- -----------------------------
+    -- ------Create CheckBox--------
+    -- -----------------------------
     local checkBox = br.ui:createCheckbox(parent, text, tooltip)
     if hideCheckbox then
         local check = br.data.settings[br.selectedSpec][br.selectedProfile][text .. "Check"]
@@ -31,11 +31,11 @@ function br.ui:createSpinner(parent, text, number, min, max, step, tooltip, tool
         checkBox:Disable()
         checkBox:ReleaseTextures()
     end
-    -------------------------------
+    -- -----------------------------
 
-    ------------------------------
-    --------Create Spinner--------
-    ------------------------------
+    -- ----------------------------
+    -- ------Create Spinner--------
+    -- ----------------------------
     local spinner = DiesalGUI:Create("Spinner")
     parent:AddChild(spinner)
 
@@ -58,9 +58,9 @@ function br.ui:createSpinner(parent, text, number, min, max, step, tooltip, tool
     )
     --    spinner:AddStyleSheet(spinnerStyleSheet)
 
-    --------------
-    ---BR Stuff---
-    --------------
+    -- ------------
+    -- -BR Stuff---
+    -- ------------
     -- Read number from config or set default
     if br.data.settings[br.selectedSpec][br.selectedProfile][text .. "Status"] == nil then
         br.data.settings[br.selectedSpec][br.selectedProfile][text .. "Status"] = number
@@ -75,9 +75,9 @@ function br.ui:createSpinner(parent, text, number, min, max, step, tooltip, tool
     local state = br.data.settings[br.selectedSpec][br.selectedProfile][text .. "Status"]
     spinner:SetNumber(state)
 
-    ------------------
-    ------Events------
-    ------------------
+    -- ----------------
+    -- ----Events------
+    -- ----------------
     -- Event: OnValueChange
     spinner:SetEventListener(
         "OnValueChanged",
@@ -105,21 +105,21 @@ function br.ui:createSpinner(parent, text, number, min, max, step, tooltip, tool
             end
         )
     end
-    ----------------------
-    ------END Events------
-    ----------------------
+    -- --------------------
+    -- ----END Events------
+    -- --------------------
     spinner:ApplySettings()
-    ---------------------------
-    --------END Spinner--------
-    ---------------------------
+    -- -------------------------
+    -- ------END Spinner--------
+    -- -------------------------
     return spinner, checkBox
 end
 
 -- Spinner Object : {number, min, max, step, tooltip}
 function br.ui:createDoubleSpinner(parent, text, spinner1, spinner2, hideCheckbox)
-    -------------------------------
-    ----Need to calculate Y Pos----
-    -------------------------------
+    -- -----------------------------
+    -- --Need to calculate Y Pos----
+    -- -----------------------------
     local Y = -5
     for i = 1, #parent.children do
         if parent.children[i].type ~= "Spinner" and parent.children[i].type ~= "Dropdown" then
@@ -128,9 +128,9 @@ function br.ui:createDoubleSpinner(parent, text, spinner1, spinner2, hideCheckbo
     end
     Y = DiesalTools.Round(Y)
 
-    -------------------------------
-    --------Create CheckBox--------
-    -------------------------------
+    -- -----------------------------
+    -- ------Create CheckBox--------
+    -- -----------------------------
     local checkBox = br.ui:createCheckbox(parent, text, "Enable auto usage of this spell")
     if hideCheckbox then
         local check = br.data.settings[br.selectedSpec][br.selectedProfile][text .. "Check"]
@@ -147,9 +147,9 @@ function br.ui:createDoubleSpinner(parent, text, spinner1, spinner2, hideCheckbo
         checkBox:ReleaseTextures()
     end
 
-    ------------------------------
-    --------Create Spinner--------
-    ------------------------------
+    -- ----------------------------
+    -- ------Create Spinner--------
+    -- ----------------------------
     local spinnerElement1 = DiesalGUI:Create("Spinner")
     local spinnerElement2 = DiesalGUI:Create("Spinner")
     parent:AddChild(spinnerElement1)
@@ -190,9 +190,9 @@ function br.ui:createDoubleSpinner(parent, text, spinner1, spinner2, hideCheckbo
         }
     )
 
-    --------------
-    ---BR Stuff---
-    --------------
+    -- ------------
+    -- -BR Stuff---
+    -- ------------
     -- Read number from config or set default
     if br.data.settings[br.selectedSpec][br.selectedProfile][text .. "1Status"] == nil then
         br.data.settings[br.selectedSpec][br.selectedProfile][text .. "1Status"] = spinner1.number
@@ -213,9 +213,9 @@ function br.ui:createDoubleSpinner(parent, text, spinner1, spinner2, hideCheckbo
     local state2 = br.data.settings[br.selectedSpec][br.selectedProfile][text .. "2Status"]
     spinnerElement2:SetNumber(state2)
 
-    ------------------
-    ------Events------
-    ------------------
+    -- ----------------
+    -- ----Events------
+    -- ----------------
     -- Event: OnValueChange
     spinnerElement1:SetEventListener(
         "OnValueChanged",
@@ -262,14 +262,14 @@ function br.ui:createDoubleSpinner(parent, text, spinner1, spinner2, hideCheckbo
             end
         )
     end
-    ----------------------
-    ------END Events------
-    ----------------------
+    -- --------------------
+    -- ----END Events------
+    -- --------------------
     spinnerElement1:ApplySettings()
     spinnerElement2:ApplySettings()
-    ---------------------------
-    --------END Spinner--------
-    ---------------------------
+    -- -------------------------
+    -- ------END Spinner--------
+    -- -------------------------
     return spinner1, spinner2
 end
 

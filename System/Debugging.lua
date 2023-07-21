@@ -43,15 +43,16 @@ function br.debug.cpu:updateDebug(startTime, table)
         br.debug.cpu[table].averageTime = 0
     end
 end
+
 -- just for testing
 function br.debug.cpu:getHealingEngine()
     local usage, calls
 
     usage, calls = br._G.GetFunctionCPUUsage(br.friend.Update, true)
-    br.debug.cpu.healingEngine["br.friend_Update"] = {usage = usage, calls = calls}
+    br.debug.cpu.healingEngine["br.friend_Update"] = { usage = usage, calls = calls }
 
     usage, calls = br._G.GetFunctionCPUUsage(br.friend.UpdateUnit, true)
-    br.debug.cpu.healingEngine["br.friend_UpdateUnit"] = {usage = usage, calls = calls}
+    br.debug.cpu.healingEngine["br.friend_UpdateUnit"] = { usage = usage, calls = calls }
 
     --local tmpUsage, tmpCalls
     --for i=1, #br.friend do
@@ -64,7 +65,7 @@ function br.debug.cpu:getHealingEngine()
     -- usage, calls = GetFunctionCPUUsage(, true)
 end
 
---- Get Execution Speed
+-- - Get Execution Speed
 --  Prints the time needed to run a function X times
 function br.debug.getEXspeed(cycles, func)
     local startTime = br._G.debugprofilestop()

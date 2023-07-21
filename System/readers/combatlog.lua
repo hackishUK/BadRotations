@@ -11,20 +11,20 @@ local cl = br.read
 function br.read.enrageReader(...)
     if br.getOptionCheck("Enrages Handler") then
         local timeStamp,
-            param,
-            hideCaster,
-            source,
-            sourceName,
-            sourceFlags,
-            sourceRaidFlags,
-            destination,
-            destName,
-            destFlags,
-            destRaidFlags,
-            spell,
-            spellName,
-            _,
-            spellType = br._G.CombatLogGetCurrentEventInfo()
+        param,
+        hideCaster,
+        source,
+        sourceName,
+        sourceFlags,
+        sourceRaidFlags,
+        destination,
+        destName,
+        destFlags,
+        destRaidFlags,
+        spell,
+        spellName,
+        _,
+        spellType = br._G.CombatLogGetCurrentEventInfo()
         -- here we will take all spell aura and check if we hold this aura in our enrage table
         -- if we find a match, we set the unit to whitelist with time remaining on the buff
         if param == "SPELL_AURA_APPLIED" and destName ~= nil then
@@ -34,7 +34,7 @@ function br.read.enrageReader(...)
                     br._G.tinsert(
                         br.read.enraged,
                         1,
-                        {guid = destination, spellType = br.lists.dispell[spell], buffID = spell}
+                        { guid = destination, spellType = br.lists.dispell[spell], buffID = spell }
                     )
                 end
             end
@@ -50,11 +50,12 @@ function br.read.enrageReader(...)
                 end
             end
         end
-    -- once a buff fades or is dispelled, we want to remove it from whitelist if its there
+        -- once a buff fades or is dispelled, we want to remove it from whitelist if its there
     end
 end
+
 function br.read.combatLog()
-    ---------------------------
+    -- -------------------------
     --[[ Combat Log Reader --]]
     local frame = br._G.CreateFrame("Frame")
     frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
@@ -67,23 +68,23 @@ function br.read.combatLog()
 
         -- best way is to split per class so lets make a selector for it
         local class = br.class
-        if class == 1 then -- Warrior
+        if class == 1 then      -- Warrior
             cl:Warrior(...)
-        elseif class == 2 then -- Paladin
+        elseif class == 2 then  -- Paladin
             cl:Paladin(...)
-        elseif class == 3 then -- Hunter
+        elseif class == 3 then  -- Hunter
             cl:Hunter(...)
-        elseif class == 4 then -- Rogue
+        elseif class == 4 then  -- Rogue
             cl:Rogue(...)
-        elseif class == 5 then -- Priest
+        elseif class == 5 then  -- Priest
             cl:Priest(...)
-        elseif class == 6 then -- Deathknight
+        elseif class == 6 then  -- Deathknight
             cl:Deathknight(...)
-        elseif class == 7 then -- Shaman
+        elseif class == 7 then  -- Shaman
             cl:Shaman(...)
-        elseif class == 8 then -- Mage
+        elseif class == 8 then  -- Mage
             cl:Mage(...)
-        elseif class == 9 then -- Warlock
+        elseif class == 9 then  -- Warlock
             cl:Warlock(...)
         elseif class == 10 then -- Monk
             cl:Monk(...)
@@ -98,24 +99,25 @@ function br.read.combatLog()
     -- add event to the reader
     frame:SetScript("OnEvent", reader)
 end
+
 -- class functions(Alphabetically)
 function cl:common(...)
     br.read.enrageReader(...)
     local timeStamp,
-        param,
-        hideCaster,
-        source,
-        sourceName,
-        sourceFlags,
-        sourceRaidFlags,
-        destination,
-        destName,
-        destFlags,
-        destRaidFlags,
-        spell,
-        spellName,
-        _,
-        spellType = br._G.CombatLogGetCurrentEventInfo()
+    param,
+    hideCaster,
+    source,
+    sourceName,
+    sourceFlags,
+    sourceRaidFlags,
+    destination,
+    destName,
+    destFlags,
+    destRaidFlags,
+    spell,
+    spellName,
+    _,
+    spellType = br._G.CombatLogGetCurrentEventInfo()
     br.guid = br._G.UnitGUID("player")
     -- Unit Dies - Remove from enemy tracking
     if param == "UNIT_DIED" and br.unlocked then
@@ -130,8 +132,8 @@ function cl:common(...)
         end
         if
             (not inInstance or (instanceType ~= "pvp" and instanceType ~= "arena")) and destination ~= nil and
-                (param == "SPELL_DAMAGE" or param == "SWING_DAMAGE")
-         then
+            (param == "SPELL_DAMAGE" or param == "SWING_DAMAGE")
+        then
             local thisUnit = br._G.GetObjectWithGUID(destination)
             if br.damaged[thisUnit] == nil and br.units[thisUnit] ~= nil and br.enemy[thisUnit] == nil then
                 for i = 1, #br.friend do
@@ -155,14 +157,14 @@ function cl:common(...)
         br.InFlight.Add(spell, destination)
     end
     -- br.tracker.handleEvent(...)
-    ----------------
+    -- --------------
     --[[Item locks]]
     if source == br.guid then
         -- TODO: OUTDATED - MoP
         local DPSPotionsSet = {
-            [1] = {Buff = 105702, Item = 76093}, -- Intel
-            [2] = {Buff = 105697, Item = 76089}, -- Agi
-            [3] = {Buff = 105706, Item = 76095} -- Str
+            [1] = { Buff = 105702, Item = 76093 }, -- Intel
+            [2] = { Buff = 105697, Item = 76089 }, -- Agi
+            [3] = { Buff = 105706, Item = 76095 } -- Str
         }
         -- DPS potions
         for i = 1, #DPSPotionsSet do
@@ -179,7 +181,7 @@ function cl:common(...)
         end
     end
     --
-    ---------------------
+    -- -------------------
     --[[ Swing Timer ]]
     if br.swingTimer == nil then
         br.swingTimer = 0
@@ -200,7 +202,7 @@ function cl:common(...)
             br.swingTimer = br.nextMH - br._G.GetTime()
         end
     end
-    -----------------------------------
+    -- ---------------------------------
     --[[ Item Use Success Recorder ]]
     if param == "SPELL_CAST_SUCCESS" then
         if sourceName ~= nil then
@@ -217,21 +219,21 @@ function cl:common(...)
             end
         end
     end
-    ------------------
+    -- ----------------
     --[[Spell Queues]]
     if br.getOptionCheck("Queue Casting") then
-        -----------------
+        -- ---------------
         --[[ Cast Failed --> Queue]]
         if param == "SPELL_CAST_FAILED" then
             if sourceName ~= nil then
                 if
                     br.isInCombat("player") and br.GetUnitIsUnit(sourceName, "player") and
-                        not br._G.IsPassiveSpell(spell) and
-                        spell ~= br.botSpell and
-                        not br.botCast and
-                        spell ~= 48018 and
-                        spell ~= 48020
-                 then
+                    not br._G.IsPassiveSpell(spell) and
+                    spell ~= br.botSpell and
+                    not br.botCast and
+                    spell ~= 48018 and
+                    spell ~= 48020
+                then
                     local notOnCD = true
                     if br ~= nil and br.player ~= nil then
                         notOnCD = br.getSpellCD(spell) <= br.player.gcdMax
@@ -243,7 +245,7 @@ function cl:common(...)
                         br.queueDest = destination
                     end
                     if br.player ~= nil and #br.player.queue == 0 and notOnCD then
-                        br._G.tinsert(br.player.queue, {id = spell, name = spellName, target = br.queueDest})
+                        br._G.tinsert(br.player.queue, { id = spell, name = spellName, target = br.queueDest })
                         if not br.isChecked("Mute Queue") then
                             br._G.print("Added |cFFFF0000" .. spellName .. "|r to the queue.")
                         end
@@ -256,7 +258,7 @@ function cl:common(...)
                                 end
                                 break
                             elseif notOnCD then
-                                br._G.tinsert(br.player.queue, {id = spell, name = spellName, target = br.queueDest})
+                                br._G.tinsert(br.player.queue, { id = spell, name = spellName, target = br.queueDest })
                                 if not br.isChecked("Mute Queue") then
                                     br._G.print("Added |cFFFF0000" .. spellName .. "|r to the queue.")
                                 end
@@ -269,15 +271,15 @@ function cl:common(...)
                 end
             end
         end
-        ------------------
+        -- ----------------
         --[[Queue Casted]]
         if sourceName ~= nil then
             if br.isInCombat("player") and br.GetUnitIsUnit(sourceName, "player") then
                 local castTime = select(4, br._G.GetSpellInfo(spell)) or 0
                 if
                     (param == "SPELL_CAST_SUCCESS" and castTime == 0) or (param == "SPELL_CAST_START" and castTime > 0) or
-                        spell == br.lastCast
-                 then
+                    spell == br.lastCast
+                then
                     if br.botCast == true then
                         br.botCast = false
                     end
@@ -298,7 +300,7 @@ function cl:common(...)
             end
         end
     end
-    ---------------------
+    -- -------------------
     --[[Debuff Tracking]]
     if destination ~= nil and destination ~= "" then
         if br.unlocked then --EWT then
@@ -322,7 +324,7 @@ function cl:common(...)
             end
         end
     end
-    ------------------
+    -- ----------------
     --[[Pandemic]]
     if source == br._G.UnitGUID("player") then
         if destination ~= nil and destination ~= "" then
@@ -343,8 +345,8 @@ function cl:common(...)
                         if param == "SPELL_AURA_REMOVED" then
                             if
                                 not br._G.UnitAffectingCombat("player") or not br._G.UnitExists(thisUnit) or
-                                    br.GetUnitIsDeadOrGhost(thisUnit)
-                             then
+                                br.GetUnitIsDeadOrGhost(thisUnit)
+                            then
                                 if pandemic[thisUnit] ~= nil then
                                     pandemic[thisUnit] = nil
                                 end
@@ -366,8 +368,8 @@ function cl:common(...)
                                     if
                                         (pandemic[thisUnit][k] == nil or pandemic[thisUnit][k] == 0 or
                                             debuff[k].duration(thisUnit) ~=
-                                                pandemic[thisUnit][k] + (pandemic[thisUnit][k] * 0.3))
-                                     then
+                                            pandemic[thisUnit][k] + (pandemic[thisUnit][k] * 0.3))
+                                    then
                                         --Print("Debuff: "..spellName.." Applied (k = "..k..", v = "..v..", duration = "..debuff[k].duration(thisUnit))
                                         pandemic[thisUnit][k] = debuff[k].duration(thisUnit)
                                         break
@@ -380,26 +382,26 @@ function cl:common(...)
             end
         end
     end
-    ---------------
+    -- -------------
     --[[ Debug --]]
     if
         br.getOptionCheck("Rotation Log") == true and source == br.guid and
-            (param == "SPELL_CAST_SUCCESS" or (param == "SPELL_CAST_FAILED" and br.getOptionCheck("Display Failcasts")))
-     then
+        (param == "SPELL_CAST_SUCCESS" or (param == "SPELL_CAST_FAILED" and br.getOptionCheck("Display Failcasts")))
+    then
         -- available locals
         -- timeStamp, param, hideCaster, source, sourceName, sourceFlags, sourceRaidFlags, destination,
         -- destName, destFlags, destRaidFlags, spell, spellName, _, spellType
         -- Add spells we dont want to appear here.
         if
-            spell ~= 75 and -- Auto Shot
-                spell ~= 88263 and -- 88263
-                -- and SpellID ~= 172        -- Corruption
-                spell ~= 8690 and -- Hearthstone
-                spell ~= 194279 and -- Caltrop DoT
-                spell ~= 196771 and
-                spell ~= 211793 and
-                spell ~= 139546
-         then -- Combo Point
+            spell ~= 75 and         -- Auto Shot
+            spell ~= 88263 and      -- 88263
+            -- and SpellID ~= 172        -- Corruption
+            spell ~= 8690 and       -- Hearthstone
+            spell ~= 194279 and     -- Caltrop DoT
+            spell ~= 196771 and
+            spell ~= 211793 and
+            spell ~= 139546
+        then  -- Combo Point
             local color = "|cff12C8FF"
             local white = "|cffFFFFFF"
             local red = "|cffFF001E"
@@ -458,21 +460,21 @@ function cl:common(...)
             local textString =
                 color ..
                 string.format("%-3d", br.castCount) ..
-                    white ..
-                        "| " ..
-                            yellow ..
-                                string.format("%-3.3f", br.getCombatTime()) ..
-                                    white ..
-                                        "| " ..
-                                            color ..
-                                                string.format("%-6.6d", br.debugSpell) ..
-                                                    white ..
-                                                        "| " ..
-                                                            color ..
-                                                                string.format("%-25.25s", spellName) ..
-                                                                    white ..
-                                                                        "| " ..
-                                                                            red .. string.format("%.25s", br.debugdest)
+                white ..
+                "| " ..
+                yellow ..
+                string.format("%-3.3f", br.getCombatTime()) ..
+                white ..
+                "| " ..
+                color ..
+                string.format("%-6.6d", br.debugSpell) ..
+                white ..
+                "| " ..
+                color ..
+                string.format("%-25.25s", spellName) ..
+                white ..
+                "| " ..
+                red .. string.format("%.25s", br.debugdest)
             -- ..white.." | "..yellow..Power
             -- pulse display
             br.ui.window.debug:AddMessage(textString:gsub("\n", " | "))
@@ -520,22 +522,23 @@ function cl:common(...)
         end
     end
 end
+
 function cl:Deathknight(...)
     local timeStamp,
-        param,
-        hideCaster,
-        source,
-        sourceName,
-        sourceFlags,
-        sourceRaidFlags,
-        destination,
-        destName,
-        destFlags,
-        destRaidFlags,
-        spell,
-        spellName,
-        _,
-        spellType = br._G.CombatLogGetCurrentEventInfo()
+    param,
+    hideCaster,
+    source,
+    sourceName,
+    sourceFlags,
+    sourceRaidFlags,
+    destination,
+    destName,
+    destFlags,
+    destRaidFlags,
+    spell,
+    spellName,
+    _,
+    spellType = br._G.CombatLogGetCurrentEventInfo()
     -- Breath of Sindragosa Active Tracker
     if spell == 152279 and sourceName == br._G.UnitName("player") then
         if param == "SPELL_AURA_APPLIED" then
@@ -546,22 +549,23 @@ function cl:Deathknight(...)
         end
     end
 end
+
 function cl:DemonHunter(...)
     local timeStamp,
-        param,
-        hideCaster,
-        source,
-        sourceName,
-        sourceFlags,
-        sourceRaidFlags,
-        destination,
-        destName,
-        destFlags,
-        destRaidFlags,
-        spell,
-        spellName,
-        _,
-        spellType = br._G.CombatLogGetCurrentEventInfo()
+    param,
+    hideCaster,
+    source,
+    sourceName,
+    sourceFlags,
+    sourceRaidFlags,
+    destination,
+    destName,
+    destFlags,
+    destRaidFlags,
+    spell,
+    spellName,
+    _,
+    spellType = br._G.CombatLogGetCurrentEventInfo()
     if sourceName ~= br._G.UnitName("player") then
         return
     end
@@ -573,23 +577,24 @@ function cl:DemonHunter(...)
         return
     end
 end
+
 function cl:Druid(...)
     local timeStamp,
-        param,
-        hideCaster,
-        source,
-        sourceName,
-        sourceFlags,
-        sourceRaidFlags,
-        destination,
-        destName,
-        destFlags,
-        destRaidFlags,
-        spell,
-        spellName,
-        _,
-        spellType = br._G.CombatLogGetCurrentEventInfo()
-    -----------
+    param,
+    hideCaster,
+    source,
+    sourceName,
+    sourceFlags,
+    sourceRaidFlags,
+    destination,
+    destName,
+    destFlags,
+    destRaidFlags,
+    spell,
+    spellName,
+    _,
+    spellType = br._G.CombatLogGetCurrentEventInfo()
+    -- ---------
     -- Kitty ---------------
     --[[ Bleed Recorder --]]
     if br._G.GetSpecialization() == 2 then
@@ -642,7 +647,7 @@ function cl:Druid(...)
             end
         end
     end
-    -----------------------
+    -- ---------------------
     --[[ Moonkin ]]
     if br.shroomsTable == nil then
         br.shroomsTable = {}
@@ -656,8 +661,8 @@ function cl:Druid(...)
     end
     if
         (param == "UNIT_DIED" or param == "UNIT_DESTROYED" or br._G.GetTotemInfo(1) ~= true) and br.shroomsTable ~= nil and
-            br.shroomsTable[1].guid == destination
-     then
+        br.shroomsTable[1].guid == destination
+    then
         br.shroomsTable[1] = {}
     end
     if source == br.guid and br.class == 11 and br._G.GetSpecialization() == 1 then
@@ -669,42 +674,44 @@ function cl:Druid(...)
         end
     end
 end
+
 function cl:Evoker(...)
     local timeStamp,
-        param,
-        hideCaster,
-        source,
-        sourceName,
-        sourceFlags,
-        sourceRaidFlags,
-        destination,
-        destName,
-        destFlags,
-        destRaidFlags,
-        spell,
-        spellName,
-        _,
-        spellType = br._G.CombatLogGetCurrentEventInfo()
-        -- if br.GetUnitIsUnit(sourceName, "player") then
-        --     print("Param: "..tostring(param)..", Spell: "..tostring(spell)..", SpellName: "..tostring(spellName))
-        -- end
+    param,
+    hideCaster,
+    source,
+    sourceName,
+    sourceFlags,
+    sourceRaidFlags,
+    destination,
+    destName,
+    destFlags,
+    destRaidFlags,
+    spell,
+    spellName,
+    _,
+    spellType = br._G.CombatLogGetCurrentEventInfo()
+    -- if br.GetUnitIsUnit(sourceName, "player") then
+    --     print("Param: "..tostring(param)..", Spell: "..tostring(spell)..", SpellName: "..tostring(spellName))
+    -- end
 end
+
 function cl:Hunter(...)
     local timeStamp,
-        param,
-        hideCaster,
-        source,
-        sourceName,
-        sourceFlags,
-        sourceRaidFlags,
-        destination,
-        destName,
-        destFlags,
-        destRaidFlags,
-        spell,
-        spellName,
-        _,
-        spellType = br._G.CombatLogGetCurrentEventInfo()
+    param,
+    hideCaster,
+    source,
+    sourceName,
+    sourceFlags,
+    sourceRaidFlags,
+    destination,
+    destName,
+    destFlags,
+    destRaidFlags,
+    spell,
+    spellName,
+    _,
+    spellType = br._G.CombatLogGetCurrentEventInfo()
     --[[ Steady Focus ]]
     if spell == 77767 and param == "SPELL_CAST_SUCCESS" then
         if br.data.settings[br.selectedSpec]["1stFocus"] ~= true then
@@ -718,22 +725,23 @@ function cl:Hunter(...)
         br.deadPet = false
     end
 end
+
 function cl:Mage(...)
     local timeStamp,
-        param,
-        hideCaster,
-        source,
-        sourceName,
-        sourceFlags,
-        sourceRaidFlags,
-        destination,
-        destName,
-        destFlags,
-        destRaidFlags,
-        spell,
-        spellName,
-        _,
-        spellType = br._G.CombatLogGetCurrentEventInfo()
+    param,
+    hideCaster,
+    source,
+    sourceName,
+    sourceFlags,
+    sourceRaidFlags,
+    destination,
+    destName,
+    destFlags,
+    destRaidFlags,
+    spell,
+    spellName,
+    _,
+    spellType = br._G.CombatLogGetCurrentEventInfo()
     if source == br.guid then
         -- Params
         -- SPELL
@@ -746,50 +754,51 @@ function cl:Mage(...)
         -- SPELL_AURA_APPLIED_DOSE,
         -- SPELL_AURA_APPLIED_REMOVED,
         if param == "SPELL" and spell == 30451 then
-        -- Print("Spell " ..GetTime())
+            -- Print("Spell " ..GetTime())
         end
         if param == "SPEL_PERIODIC" and spell == 30451 then
-        --Print("Spell Periodic " ..GetTime())
+            --Print("Spell Periodic " ..GetTime())
         end
         if param == "SPELL_CAST_SUCCESS" and spell == 30451 then
-        --Print("Spell Cast Success " ..GetTime())
+            --Print("Spell Cast Success " ..GetTime())
         end
         if param == "SPELL_DAMAGE" and spell == 30451 then
-        --Print("Spell Damage " ..GetTime())
+            --Print("Spell Damage " ..GetTime())
         end
         if param == "SPELL_MISSED" and spell == 30451 then
-        --Print("Spell Missed " ..GetTime())
+            --Print("Spell Missed " ..GetTime())
         end
         if param == "SPELL_AURA_REFRESH" and spell == 36032 then
-        --Print("Spell Aura Refresh " ..GetTime())
+            --Print("Spell Aura Refresh " ..GetTime())
         end
         if param == "SPELL_AURA_APPLIED" and spell == 36032 then
-        --Print("Spell Aura Applied " ..GetTime())
+            --Print("Spell Aura Applied " ..GetTime())
         end
         if param == "SPELL_AURA_APPLIED_DOSE" and spell == 36032 then
-        --Print("Spell Aura Applied Dose " ..GetTime())
+            --Print("Spell Aura Applied Dose " ..GetTime())
         end
         if param == "SPELL_AURA_REMOVED" and spell == 36032 then
-        --Print("Spell Aura Removed " ..GetTime())
+            --Print("Spell Aura Removed " ..GetTime())
         end
     end
 end
+
 function cl:Monk(...)
     local timeStamp,
-        param,
-        hideCaster,
-        source,
-        sourceName,
-        sourceFlags,
-        sourceRaidFlags,
-        destination,
-        destName,
-        destFlags,
-        destRaidFlags,
-        spell,
-        spellName,
-        _,
-        spellType = br._G.CombatLogGetCurrentEventInfo()
+    param,
+    hideCaster,
+    source,
+    sourceName,
+    sourceFlags,
+    sourceRaidFlags,
+    destination,
+    destName,
+    destFlags,
+    destRaidFlags,
+    spell,
+    spellName,
+    _,
+    spellType = br._G.CombatLogGetCurrentEventInfo()
     -- if prevCombo == nil or not UnitAffectingCombat("player") then prevCombo = 6603 end
     if br.player ~= nil and br._G.GetSpecialization() == 3 and br.player.spell.fistsOfFury ~= nil then
         local myspell = br.player.spell
@@ -824,29 +833,30 @@ function cl:Monk(...)
                     if comboSpells[spell] and spell ~= var.lastCombo then
                         -- prevCombo = lastCombo
                         var.lastCombo = spell
-                    -- Print(GetSpellInfo(var.lastCombo).." Success! ")--- Prev Last Combo was: "..GetSpellInfo(prevCombo))
+                        -- Print(GetSpellInfo(var.lastCombo).." Success! ")--- Prev Last Combo was: "..GetSpellInfo(prevCombo))
                     end
                 end
             end
         end
     end
 end
+
 function cl:Priest(...)
     local timeStamp,
-        param,
-        hideCaster,
-        source,
-        sourceName,
-        sourceFlags,
-        sourceRaidFlags,
-        destination,
-        destName,
-        destFlags,
-        destRaidFlags,
-        spell,
-        spellName,
-        _,
-        spellType = br._G.CombatLogGetCurrentEventInfo()
+    param,
+    hideCaster,
+    source,
+    sourceName,
+    sourceFlags,
+    sourceRaidFlags,
+    destination,
+    destName,
+    destFlags,
+    destRaidFlags,
+    spell,
+    spellName,
+    _,
+    spellType = br._G.CombatLogGetCurrentEventInfo()
     if br._G.GetSpecialization() == 3 then
         -- Periodic Damage Events
         if param == "SPELL_PERIODIC_DAMAGE" then
@@ -918,8 +928,8 @@ function cl:Priest(...)
             local thisUnit = br._G.GetObjectWithGUID(destination)
             if
                 thisUnit ~= nil and param == "SPELL_CAST_SUCCESS" and
-                    (br._G.UnitIsFriend(thisUnit, "player") or br._G.UnitIsUnit(thisUnit, "player"))
-             then
+                (br._G.UnitIsFriend(thisUnit, "player") or br._G.UnitIsUnit(thisUnit, "player"))
+            then
                 --[[ Print("Friend Check: ".. tostring(UnitIsFriend(thisUnit,"player")))
                 Print("player Check: ".. tostring(UnitIsUnit(thisUnit,"player")))
                 Print("Adding 1 to heal counter") ]]
@@ -933,23 +943,24 @@ function cl:Priest(...)
         end
     end
 end
+
 function cl:Paladin(...)
     local timeStamp,
-        param,
-        hideCaster,
-        source,
-        sourceName,
-        sourceFlags,
-        sourceRaidFlags,
-        destination,
-        destName,
-        destFlags,
-        destRaidFlags,
-        spell,
-        spellName,
-        _,
-        spellType = br._G.CombatLogGetCurrentEventInfo()
-    -----------------------
+    param,
+    hideCaster,
+    source,
+    sourceName,
+    sourceFlags,
+    sourceRaidFlags,
+    destination,
+    destName,
+    destFlags,
+    destRaidFlags,
+    spell,
+    spellName,
+    _,
+    spellType = br._G.CombatLogGetCurrentEventInfo()
+    -- ---------------------
     --[[ Class Trinket ]]
     if (source == br.guid and (spell == 35395 or spell == 53595)) then
         br.previousT18classTrinket = destination
@@ -962,23 +973,24 @@ function cl:Paladin(...)
         br.previousJudgmentTarget = destination
     end
 end
+
 function cl:Rogue(...)
     local timeStamp,
-        param,
-        hideCaster,
-        source,
-        sourceName,
-        sourceFlags,
-        sourceRaidFlags,
-        destination,
-        destName,
-        destFlags,
-        destRaidFlags,
-        spell,
-        spellName,
-        _,
-        spellType = br._G.CombatLogGetCurrentEventInfo()
-    --------------------------------------
+    param,
+    hideCaster,
+    source,
+    sourceName,
+    sourceFlags,
+    sourceRaidFlags,
+    destination,
+    destName,
+    destFlags,
+    destRaidFlags,
+    spell,
+    spellName,
+    _,
+    spellType = br._G.CombatLogGetCurrentEventInfo()
+    -- ------------------------------------
     --[[ Pick Pocket Success Recorder ]]
     if br.unpickable == nil then br.unpickable = false end
     if br.pickPocketUnit == nil then br.pickPocketUnit = br._G.UnitGUID("player") end
@@ -1058,28 +1070,29 @@ function cl:Rogue(...)
             if spell == 287916 then
                 br.vigorstacks = br.getBuffStacks("player", 287916) or 0
                 br.vigorupdate = br._G.GetTime()
-            --print(br.vigorstacks..", "..br.vigorupdate)
+                --print(br.vigorstacks..", "..br.vigorupdate)
             end
         end
     end
 end
+
 function cl:Shaman(...) -- 7
     local timeStamp,
-        param,
-        hideCaster,
-        source,
-        sourceName,
-        sourceFlags,
-        sourceRaidFlags,
-        destination,
-        destName,
-        destFlags,
-        destRaidFlags,
-        spell,
-        spellName,
-        _,
-        spellType = br._G.CombatLogGetCurrentEventInfo()
-    --------------------
+    param,
+    hideCaster,
+    source,
+    sourceName,
+    sourceFlags,
+    sourceRaidFlags,
+    destination,
+    destName,
+    destFlags,
+    destRaidFlags,
+    spell,
+    spellName,
+    _,
+    spellType = br._G.CombatLogGetCurrentEventInfo()
+    -- ------------------
     --[[ Fire Totem ]]
     if source == br.guid and param == "SPELL_SUMMON" and (spell == br.player.spell.seaingTotem or spell == br.player.spell.magmaTotem) then
         br.activeTotem = destination
@@ -1088,7 +1101,7 @@ function cl:Shaman(...) -- 7
     if param == "UNIT_DESTROYED" and br.activeTotem == destination then
         br.activeTotem = nil
     end
-    -------------
+    -- -----------
     --[[ Lightning Bolt ]]
     if br.player ~= nil and br._G.GetSpecialization() == 2 then
         if sourceName ~= nil then
@@ -1100,17 +1113,17 @@ function cl:Shaman(...) -- 7
                 if param == "SPELL_CAST_START" then
                     if
                         (spell == br.player.spell.lightningBolt or spell == br.player.spell.chainLightning) and
-                            br.player.variables.fillLightning
-                     then
+                        br.player.variables.fillLightning
+                    then
                         br.lightningStarted = true
                     end
                 end
                 if param == "SPELL_CAST_SUCCESS" then
                     if
                         (spell == br.player.spell.lightningBolt or spell == br.player.spell.chainLightning) and
-                            br.player.variables.fillLightning and
-                            br.lightningStarted
-                     then
+                        br.player.variables.fillLightning and
+                        br.lightningStarted
+                    then
                         br.player.variables.fillLightning = false
                         br.lightningStarted = false
                     end
@@ -1119,22 +1132,23 @@ function cl:Shaman(...) -- 7
         end
     end
 end
+
 function cl:Warlock(...) -- 9
     local timeStamp,
-        param,
-        hideCaster,
-        source,
-        sourceName,
-        sourceFlags,
-        sourceRaidFlags,
-        destination,
-        destName,
-        destFlags,
-        destRaidFlags,
-        spell,
-        spellName,
-        _,
-        spellType = br._G.CombatLogGetCurrentEventInfo()
+    param,
+    hideCaster,
+    source,
+    sourceName,
+    sourceFlags,
+    sourceRaidFlags,
+    destination,
+    destName,
+    destFlags,
+    destRaidFlags,
+    spell,
+    spellName,
+    _,
+    spellType = br._G.CombatLogGetCurrentEventInfo()
     if br._G.GetSpecialization() == 1 then
         if source == br.guid and param == "UNIT_SPELLCAST_CHANNEL_START" then
             -- Drain Soul counter
@@ -1201,30 +1215,30 @@ function cl:Warlock(...) -- 9
         end
     end
     if br._G.GetSpecialization() == 2 then
-    -- if source == br.guid and param == "SPELL_CAST_SUCCESS" then
-    --     -- Hand of Guldan
-    --     if  == 105174 then
-    --         if not br.lastCastTable.hog then br.lastCastTable.hog = {} end
-    --         if br.lastCast then
-    --             tinsert(br.lastCastTable.hog, 1, GetTime())
-    --             if #br.lastCastTable.hog == 5 then
-    --                 br.lastCastTable.hog[5] = nil
-    --             end
-    --         end
-    --     end
-    --     -- Line CD
-    --     if not br.lastCastTable.line_cd then br.lastCastTable.line_cd = {} end
-    --     br.lastCastTable.line_cd[] = GetTime()
-    -- end
-    -- -- Demonology Manager
-    -- -- Imps are summoned
-    -- if param == "SPELL_SUMMON" and source == br.guid and ( == 104317 or  == 279910) then
-    --     print("Imp SUMMON")
-    -- end
-    -- -- Other Demons are summoned
-    -- if param == "SPELL_SUMMON" and source == br.guid and not (spell == 104317 or spell == 279910) then
-    --     print("Demon SUMMON")
-    -- end
+        -- if source == br.guid and param == "SPELL_CAST_SUCCESS" then
+        --     -- Hand of Guldan
+        --     if  == 105174 then
+        --         if not br.lastCastTable.hog then br.lastCastTable.hog = {} end
+        --         if br.lastCast then
+        --             tinsert(br.lastCastTable.hog, 1, GetTime())
+        --             if #br.lastCastTable.hog == 5 then
+        --                 br.lastCastTable.hog[5] = nil
+        --             end
+        --         end
+        --     end
+        --     -- Line CD
+        --     if not br.lastCastTable.line_cd then br.lastCastTable.line_cd = {} end
+        --     br.lastCastTable.line_cd[] = GetTime()
+        -- end
+        -- -- Demonology Manager
+        -- -- Imps are summoned
+        -- if param == "SPELL_SUMMON" and source == br.guid and ( == 104317 or  == 279910) then
+        --     print("Imp SUMMON")
+        -- end
+        -- -- Other Demons are summoned
+        -- if param == "SPELL_SUMMON" and source == br.guid and not (spell == 104317 or spell == 279910) then
+        --     print("Demon SUMMON")
+        -- end
     end
     if br._G.GetSpecialization() == 3 then
         -- last Immolate
@@ -1233,7 +1247,7 @@ function cl:Warlock(...) -- 9
             br.lastImmolateTime = br._G.GetTime()
         end
     end
-    ---------------------
+    -- -------------------
     --[[ Pet Manager --]]
     if source == br.guid and param == "SPELL_CAST_SUCCESS" then
         if spell == 688 or spell == 112866 then
@@ -1258,23 +1272,24 @@ function cl:Warlock(...) -- 9
         end
     end
 end
+
 function cl:Warrior(...)
     local timeStamp,
-        param,
-        hideCaster,
-        source,
-        sourceName,
-        sourceFlags,
-        sourceRaidFlags,
-        destination,
-        destName,
-        destFlags,
-        destRaidFlags,
-        spell,
-        spellName,
-        _,
-        spellType = br._G.CombatLogGetCurrentEventInfo()
-    ----------------------------------
+    param,
+    hideCaster,
+    source,
+    sourceName,
+    sourceFlags,
+    sourceRaidFlags,
+    destination,
+    destName,
+    destFlags,
+    destRaidFlags,
+    spell,
+    spellName,
+    _,
+    spellType = br._G.CombatLogGetCurrentEventInfo()
+    -- --------------------------------
     --[[ Bleed Recorder (Warrior) --]]
     if destName == br._G.UnitName("player") then
         br.reflectPlayer = true
@@ -1290,8 +1305,8 @@ function cl:Warrior(...)
             end
         elseif
             source == br.guid and (param == "SPELL_AURA_APPLIED" or param == "SPELL_AURA_REFRESH") and
-                br.deepWoundsCastAP ~= nil
-         then
+            br.deepWoundsCastAP ~= nil
+        then
             if spell == 115767 then
                 br.deepWoundsStoredAP = br.deepWoundsCastAP
             end

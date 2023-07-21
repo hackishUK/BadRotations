@@ -1,7 +1,7 @@
 local _, br = ...
-----------------------------------------------------------------------------------------------------
+-- --------------------------------------------------------------------------------------------------
 -- Variables
-----------------------------------------------------------------------------------------------------
+-- --------------------------------------------------------------------------------------------------
 -- local cdnUrl = "https://cdn.badrotations.org/"
 local apiUrl = "https://www.badrotations.org/"
 
@@ -13,9 +13,9 @@ local latestCommit
 local purple = "|cffa330c9"
 local isInitialized = false
 
-----------------------------------------------------------------------------------------------------
+-- --------------------------------------------------------------------------------------------------
 -- Utilities
-----------------------------------------------------------------------------------------------------
+-- --------------------------------------------------------------------------------------------------
 local function IsSettingChecked()
    return br.isChecked("Auto Check for Updates")
 end
@@ -36,7 +36,7 @@ end
 
 local function RaidWarning(message)
    if br.isChecked("Overlay Messages") then
-      br._G.RaidNotice_AddMessage(br._G.RaidWarningFrame, message, {r = 1, g = 0.3, b = 0.1})
+      br._G.RaidNotice_AddMessage(br._G.RaidWarningFrame, message, { r = 1, g = 0.3, b = 0.1 })
    end
 end
 
@@ -54,9 +54,9 @@ local function SendRequestAsync(url, OnComplete)
    )
 end
 
-----------------------------------------------------------------------------------------------------
+-- --------------------------------------------------------------------------------------------------
 -- Update
-----------------------------------------------------------------------------------------------------
+-- --------------------------------------------------------------------------------------------------
 function br.updater:Update()
    if not IsSettingChecked() then
       Print("Setting is disabled. To enable: Configuration > General > Auto Check for Updates")
@@ -65,9 +65,9 @@ function br.updater:Update()
    end
 end
 
-----------------------------------------------------------------------------------------------------
+-- --------------------------------------------------------------------------------------------------
 -- Check for Updates
-----------------------------------------------------------------------------------------------------
+-- --------------------------------------------------------------------------------------------------
 local function SetLatestCommitAsync(OnComplete)
    local url = apiUrl .. "commits/latest"
 
@@ -99,21 +99,21 @@ local function CheckForUpdatesAsync(OnComplete)
                local aheadBy = json:match('"AheadBy":(.-),')
                if aheadBy == "0" then
                   return
-               -- if not isInitialized then
-               --    Print("Up to date. Version "..purple..currentCommit:sub(1, 7))
-               -- end
-               -- if type(OnComplete) == "function" then
-               --    OnComplete(json)
-               -- end
-               -- return
+                  -- if not isInitialized then
+                  --    Print("Up to date. Version "..purple..currentCommit:sub(1, 7))
+                  -- end
+                  -- if type(OnComplete) == "function" then
+                  --    OnComplete(json)
+                  -- end
+                  -- return
                end
 
                local commitSection = json:match('"Commits":%[(.-)%]')
                Print(
                   "Local version: " ..
-                     purple ..
-                        currentCommit:sub(1, 7) ..
-                           " |cffFFFFFFLatest version: " .. purple .. latestCommit:sub(1, 7) .. "."
+                  purple ..
+                  currentCommit:sub(1, 7) ..
+                  " |cffFFFFFFLatest version: " .. purple .. latestCommit:sub(1, 7) .. "."
                )
                if commitSection then
                   for commit in commitSection:gmatch("{(.-)}") do
@@ -131,13 +131,13 @@ local function CheckForUpdatesAsync(OnComplete)
                if aheadBy then
                   Print(
                      "BadRotations is currently " ..
-                        purple ..
-                           aheadBy ..
-                              " |cffffffff" .. "versions out of date.\n" .. "Please update for best performance."
+                     purple ..
+                     aheadBy ..
+                     " |cffffffff" .. "versions out of date.\n" .. "Please update for best performance."
                   )
                   RaidWarning(
                      "BadRotations is currently " ..
-                        aheadBy .. " versions out of date.\nPlease update for best performance."
+                     aheadBy .. " versions out of date.\nPlease update for best performance."
                   )
                end
 
@@ -163,9 +163,9 @@ function br.updater:CheckOutdated()
    CheckForUpdatesAsync()
 end
 
-----------------------------------------------------------------------------------------------------
+-- --------------------------------------------------------------------------------------------------
 -- Initialize
-----------------------------------------------------------------------------------------------------
+-- --------------------------------------------------------------------------------------------------
 local function GetAddonName()
    for i = 1, br._G.GetNumAddOns() do
       local name, title = br._G.GetAddOnInfo(i)

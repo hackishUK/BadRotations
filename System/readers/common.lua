@@ -1,9 +1,9 @@
 local _, br = ...
 function br.read.commonReaders()
-	---------------
+	-- -------------
 	--[[ Readers ]]
-	---------------
-	-----------------------
+	-- -------------
+	-- ---------------------
 	--[[ Bag Update ]]
 	local Frame = br._G.CreateFrame("Frame")
 	Frame:RegisterEvent("BAG_UPDATE")
@@ -13,7 +13,7 @@ function br.read.commonReaders()
 		end
 	end
 	Frame:SetScript("OnEvent", BagUpdate)
-	-----------------------
+	-- ---------------------
 	--[[ Loss of control ]]
 	local frame = br._G.CreateFrame("Frame")
 	frame:RegisterEvent("LOSS_OF_CONTROL_UPDATE")
@@ -21,7 +21,7 @@ function br.read.commonReaders()
 		-- Print(...)
 	end
 	frame:SetScript("OnEvent", lostControl)
-	----------------
+	-- --------------
 	--[[ Auto Join]]
 	Frame = br._G.CreateFrame("Frame")
 	Frame:RegisterEvent("LFG_PROPOSAL_SHOW")
@@ -33,7 +33,7 @@ function br.read.commonReaders()
 		end
 	end
 	Frame:SetScript("OnEvent", MerchantShow)
-	--------------
+	-- ------------
 	-- --[[ Eclipse]] -- Errors in Patch 8.0 (BfA)
 	-- local Frame = CreateFrame('Frame')
 	-- Frame:RegisterEvent("ECLIPSE_DIRECTION_CHANGE")
@@ -47,7 +47,7 @@ function br.read.commonReaders()
 	-- 	end
 	-- end
 	-- Frame:SetScript("OnEvent", Eclipse)
-	--------------------------
+	-- ------------------------
 	--[[ isStanding Frame --]]
 	br.DontMoveStartTime = nil
 	br._G.CreateFrame("Frame"):SetScript(
@@ -66,7 +66,7 @@ function br.read.commonReaders()
 			end
 		end
 	)
-	----------------------
+	-- --------------------
 	--[[ timer Frame --]]
 	br._G.CreateFrame("Frame"):SetScript(
 		"OnUpdate",
@@ -81,7 +81,7 @@ function br.read.commonReaders()
 			end
 		end
 	)
-	-----------------------
+	-- ---------------------
 	--[[ Merchant Show --]]
 	Frame = br._G.CreateFrame("Frame")
 	Frame:RegisterEvent("MERCHANT_SHOW")
@@ -93,7 +93,7 @@ function br.read.commonReaders()
 		end
 	end
 	Frame:SetScript("OnEvent", MerchantShow)
-	-------------------------
+	-- -----------------------
 	--[[ Entering Combat --]]
 	Frame = br._G.CreateFrame("Frame")
 	Frame:RegisterEvent("PLAYER_REGEN_DISABLED")
@@ -109,7 +109,7 @@ function br.read.commonReaders()
 		end
 	end
 	Frame:SetScript("OnEvent", EnteringCombat)
-	-----------------------
+	-- ---------------------
 	--[[ Leaving Combat --]]
 	Frame = br._G.CreateFrame("Frame")
 	Frame:RegisterEvent("PLAYER_REGEN_ENABLED")
@@ -142,7 +142,7 @@ function br.read.commonReaders()
 		end
 	end
 	Frame:SetScript("OnEvent", LeavingCombat)
-	---------------------------
+	-- -------------------------
 	--[[ UI Error Messages --]]
 	Frame = br._G.CreateFrame("Frame")
 	Frame:RegisterEvent("UI_ERROR_MESSAGE")
@@ -165,7 +165,8 @@ function br.read.commonReaders()
 		end
 		if param == "PETTAME_CANTCONTROLEXOTIC" .. "." then
 			if br.data.settings[br.selectedSpec]["Box PetManager"] < 5 then
-				br.data.settings[br.selectedSpec]["Box PetManager"] = br.data.settings[br.selectedSpec]["Box PetManager"] + 1
+				br.data.settings[br.selectedSpec]["Box PetManager"] = br.data.settings[br.selectedSpec]
+				["Box PetManager"] + 1
 			else
 				br.data.settings[br.selectedSpec]["Box PetManager"] = 1
 			end
@@ -194,7 +195,7 @@ function br.read.commonReaders()
 		end
 	end
 	Frame:SetScript("OnEvent", UiErrorMessages)
-	------------------------
+	-- ----------------------
 	--[[ Spells Changed --]]
 	Frame = br._G.CreateFrame("Frame")
 	Frame:RegisterEvent("LEARNED_SPELL_IN_TAB")
@@ -204,7 +205,7 @@ function br.read.commonReaders()
 		end
 	end
 	Frame:SetScript("OnEvent", SpellsChanged)
-	--- under devlopment not working as of now
+	-- - under devlopment not working as of now
 	--[[ Addon reader ]]
 	-- local Frame = CreateFrame('Frame')
 	-- Frame:RegisterEvent("CHAT")
@@ -288,7 +289,7 @@ function br.read.commonReaders()
 					elseif
 						not ((br.isChecked("Attack MC Targets") and (not br.GetUnitIsFriend(unit, "player") or (br._G.UnitIsCharmed(unit) and br._G.UnitCanAttack("player", unit)))) or
 							not br.GetUnitIsFriend(unit, "player"))
-					 then
+					then
 						self:AddLine("MC Check Fail", 1, 0, 0)
 					elseif br.getOptionCheck("Don't break CCs") and br.isLongTimeCCed(unit) then
 						self:AddLine("CC Check Fail", 1, 0, 0)
@@ -303,7 +304,7 @@ function br.read.commonReaders()
 			end
 		end
 	)
-	---------------------------
+	-- -------------------------
 	--[[ Combat Log Reader --]]
 	local superReaderFrame = br._G.CreateFrame("Frame")
 	superReaderFrame:RegisterEvent("CHAT_MSG_ADDON")
@@ -362,7 +363,7 @@ function br.read.commonReaders()
 		if event == "PLAYER_TALENT_UPDATE" or event == "PLAYER_LEVEL_UP" or event == "PLAYER_EQUIPMENT_CHANGED" or event == "AZERITE_EMPOWERED_ITEM_SELECTION_UPDATED" or event == "TRAIT_CONFIG_UPDATED" then
 			br.updatePlayerInfo = true
 		end
-		-------------------------------------------------
+		-- -----------------------------------------------
 		--[[ SpellCast Sents (used to define target) --]]
 		if event == "UNIT_SPELLCAST_SENT" then
 			local SourceUnit = select(1, ...)
@@ -385,40 +386,40 @@ function br.read.commonReaders()
 				local MyClass = select(2, br._G.UnitClass("player"))
 				if MyClass == "MAGE" then -- Mage
 				end
-			-- if MyClass == "MONK" then -- Monk
-			-- 	local br = br._G["br"]
-			-- 	local spec = br._G["GetSpecialization"]
-			-- 	if br.player ~= nil and spec() == 3 and br.player.spell.fistsOfFury ~= nil then
-			-- 		local cd 	= br.player.cd
-			-- 		local spell = br.player.spell
-			-- 		local unit 	= br.player.unit
-			-- 		local var 	= br.player.variables
-			-- 		local comboSpells = {
-			-- 			[spell.blackoutKick]              = true,
-			-- 			[spell.chiBurst]                  = true,
-			-- 			[spell.chiWave]                   = true,
-			-- 			[spell.cracklingJadeLightning]    = true,
-			-- 			[spell.fistsOfFury]               = true,
-			-- 			[spell.fistOfTheWhiteTiger]       = true,
-			-- 			[spell.flyingSerpentKick]         = true,
-			-- 			[spell.risingSunKick]             = true,
-			-- 			[spell.rushingJadeWind]           = true,
-			-- 			[spell.spinningCraneKick]         = true,
-			-- 			[spell.tigerPalm]                 = true,
-			-- 			[spell.touchOfDeath]              = true,
-			-- 			[spell.whirlingDragonPunch]       = true,
-			-- 		}
-			-- 		if var.prevCombo == nil or not unit.inCombat() then var.prevCombo = 6603 end
-			-- 		if var.lastCombo == nil or not unit.inCombat() then var.lastCombo = 6603 end
-			-- 		if comboSpells[spell] and not (cd[spell].remain() > unit.gcd("true")) and unit.inCombat() then
-			-- 			var.lastCombo = var.prevCombo
-			-- 			var.prevCombo = 6603
-			-- 		end
-			-- 	end
-			-- end
+				-- if MyClass == "MONK" then -- Monk
+				-- 	local br = br._G["br"]
+				-- 	local spec = br._G["GetSpecialization"]
+				-- 	if br.player ~= nil and spec() == 3 and br.player.spell.fistsOfFury ~= nil then
+				-- 		local cd 	= br.player.cd
+				-- 		local spell = br.player.spell
+				-- 		local unit 	= br.player.unit
+				-- 		local var 	= br.player.variables
+				-- 		local comboSpells = {
+				-- 			[spell.blackoutKick]              = true,
+				-- 			[spell.chiBurst]                  = true,
+				-- 			[spell.chiWave]                   = true,
+				-- 			[spell.cracklingJadeLightning]    = true,
+				-- 			[spell.fistsOfFury]               = true,
+				-- 			[spell.fistOfTheWhiteTiger]       = true,
+				-- 			[spell.flyingSerpentKick]         = true,
+				-- 			[spell.risingSunKick]             = true,
+				-- 			[spell.rushingJadeWind]           = true,
+				-- 			[spell.spinningCraneKick]         = true,
+				-- 			[spell.tigerPalm]                 = true,
+				-- 			[spell.touchOfDeath]              = true,
+				-- 			[spell.whirlingDragonPunch]       = true,
+				-- 		}
+				-- 		if var.prevCombo == nil or not unit.inCombat() then var.prevCombo = 6603 end
+				-- 		if var.lastCombo == nil or not unit.inCombat() then var.lastCombo = 6603 end
+				-- 		if comboSpells[spell] and not (cd[spell].remain() > unit.gcd("true")) and unit.inCombat() then
+				-- 			var.lastCombo = var.prevCombo
+				-- 			var.prevCombo = 6603
+				-- 		end
+				-- 	end
+				-- end
 			end
 		end
-		-----------------------------
+		-- ---------------------------
 		--[[ SpellCast Succeeded --]]
 		if event == "UNIT_SPELLCAST_START" then
 			local SourceUnit = select(1, ...)
@@ -462,7 +463,7 @@ function br.read.commonReaders()
 			end
 		end
 
-		-----------------------------
+		-- ---------------------------
 		--[[ SpellCast Succeeded --]]
 		if event == "UNIT_SPELLCAST_SUCCEEDED" then
 			local SourceUnit = select(1, ...)
@@ -487,14 +488,15 @@ function br.read.commonReaders()
 									br._G.SpellStopTargeting()
 								end
 								if not br.isChecked("Mute Queue") then
-									br._G.print("Cast Success! - Removed |cFFFF0000" .. br._G.GetSpellInfo(spell) .. "|r from the queue.")
+									br._G.print("Cast Success! - Removed |cFFFF0000" ..
+									br._G.GetSpellInfo(spell) .. "|r from the queue.")
 								end
 								break
 							end
 						end
 					end
 				end
-				---
+				-- -
 				local MyClass = br._G.UnitClass("player")
 				-- Hunter
 				if MyClass == 3 then
@@ -522,7 +524,7 @@ function br.read.commonReaders()
 				end
 			end
 		end
-		--------------------------
+		-- ------------------------
 		--[[ SpellCast Failed --]]
 		if event == "UNIT_SPELLCAST_FAILED" then
 			local SourceUnit = select(1, ...)
@@ -531,7 +533,7 @@ function br.read.commonReaders()
 			if SourceUnit == "player" and br.isKnown(SpellID) then
 				-- Kill Command
 				if SpellID == 34026 then
-				---Print("Kill Command FAILED")
+					-- -Print("Kill Command FAILED")
 				end
 				-- Whistle failed
 				if SpellID == 883 or SpellID == 83242 or SpellID == 83243 or SpellID == 83244 or SpellID == 83245 then
@@ -543,7 +545,7 @@ function br.read.commonReaders()
 				end
 			end
 		end
-		-----------------------------
+		-- ---------------------------
 		--[[ Spell Failed Immune --]]
 		if event == "SPELL_FAILED_IMMUNE" then
 			local SourceUnit = select(1, ...)
@@ -604,7 +606,7 @@ function br.read.commonReaders()
 			local SourceUnit = select(1, ...)
 			-- local SpellID = select(3, ...)
 			if SourceUnit == "player" then
-			--Print("Channel Update")
+				--Print("Channel Update")
 			end
 		end
 		if event == "UNIT_SPELLCAST_EMPOWER_START" then
@@ -627,7 +629,7 @@ function br.read.commonReaders()
 			local SourceUnit = select(1, ...)
 			-- local SpellID = select(3, ...)
 			if SourceUnit == "player" then
-			--Print("Channel Update")
+				--Print("Channel Update")
 			end
 		end
 		if event == "UI_ERROR_MESSAGE" then
@@ -648,10 +650,10 @@ function br.read.commonReaders()
 			end
 			if not br.GetUnitIsDeadOrGhost("player") and (br.GetUnitIsDeadOrGhost("pet") or not br.GetUnitExists("pet")) and (errorMsg == 51 or errorMsg == 203) then --or errorMsg == 277 or errorMsg == 275 then
 				br.deadPet = true
-			-- if deadPet == false then
-			-- elseif deadPet == true and br._G.UnitHealth("pet") > 0 then
-			-- 	deadPet = false
-			-- end
+				-- if deadPet == false then
+				-- elseif deadPet == true and br._G.UnitHealth("pet") > 0 then
+				-- 	deadPet = false
+				-- end
 			end
 		end
 		if event == "ENCOUNTER_START" then

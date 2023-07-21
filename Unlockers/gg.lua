@@ -1,6 +1,6 @@
---------------------------------------------------------------------------------------------------------------------------------
+-- ------------------------------------------------------------------------------------------------------------------------------
 -- unlockList
---------------------------------------------------------------------------------------------------------------------------------
+-- ------------------------------------------------------------------------------------------------------------------------------
 local unlockList =
 {
 	"AcceptBattlefieldPort",
@@ -216,9 +216,9 @@ local unlockList =
 	"UseToyByName"
 }
 
---------------------------------------------------------------------------------------------------------------------------------
+-- ------------------------------------------------------------------------------------------------------------------------------
 -- functions exported to BadRotations
---------------------------------------------------------------------------------------------------------------------------------
+-- ------------------------------------------------------------------------------------------------------------------------------
 local _, br = ...
 local b = br._G
 local unlock = br.unlock
@@ -247,7 +247,7 @@ end
 function unlock.GGUnlock()
 	if not ggUnlocked then
 		if _G["GetExeDirectory"] == nil then return false end
-		RunScript(ReadFile(GetExeDirectory().."\\api.lua"))
+		RunScript(ReadFile(GetExeDirectory() .. "\\api.lua"))
 		if GetWowDirectory() ~= nil then
 			-- b.print("Unlocked")
 			ggUnlocked = true
@@ -260,9 +260,9 @@ function unlock.GGUnlock()
 			return false
 		end
 	end
-	--------------------------------
+	-- ------------------------------
 	-- API unlocking
-	--------------------------------
+	-- ------------------------------
 	for k, v in pairs(funcCopies) do
 		b[k] = function(...) return b.Unlock(v, ...) end
 	end
@@ -276,7 +276,7 @@ function unlock.GGUnlock()
 			if _G.strfind(_G.strupper(filter), "HELPFUL") then
 				for i = 1, 40 do
 					local buffName, _, _, _, _, _, _, _, _, buffSpellID = b.UnitBuff(unit, i, "player")
-					if buffName == nil then	return nil end
+					if buffName == nil then return nil end
 					-- if buffSpellID == spellID then
 					if buffName == spellName then
 						return Aura
@@ -285,7 +285,7 @@ function unlock.GGUnlock()
 			else
 				for i = 1, 40 do
 					local buffName, _, _, _, _, _, _, _, _, buffSpellID = b.UnitDebuff(unit, i, "player")
-					if buffName == nil then	return nil end
+					if buffName == nil then return nil end
 					-- if buffSpellID == spellID then
 					if buffName == spellName then
 						return Aura
@@ -315,9 +315,9 @@ function unlock.GGUnlock()
 		["GUID"] = 15,
 	}
 
-	--------------------------------
+	-- ------------------------------
 	-- API copy/rename/unlock
-	--------------------------------
+	-- ------------------------------
 	b.GetWoWDirectory = function(...) return b.GetWowDirectory(...) end
 	b.ObjectFacing = function(...) return b.UnitFacing(...) end
 	b.UnitMovementFlags = function(...) return b.GetUnitMovementFlags(...) end
@@ -327,9 +327,9 @@ function unlock.GGUnlock()
 	b.ObjectInteract = function(...) return b.InteractUnit(...) end
 	b.ObjectIsVisible = function(...) return b.UnitIsVisible(...) end
 
-	--------------------------------
+	-- ------------------------------
 	-- object fields
-	--------------------------------
+	-- ------------------------------
 	b.UnitTarget = function(unit)
 		return b.ObjectField(unit, 0x9C, FieldType.GUID) --b.ObjectField(unit, 0x1748, 15)
 	end
@@ -342,9 +342,9 @@ function unlock.GGUnlock()
 	b.UnitCombatReach = function(unit)
 		return b.ObjectField(unit, 0x1A0, FieldType.Float) --b.ObjectField(unit, 0x17E0, 10)
 	end
-	--------------------------------
+	-- ------------------------------
 	-- API conversions
-	--------------------------------
+	-- ------------------------------
 	b.ObjectPointer = function(...)
 		if b.UnitExists(...) then
 			return b.UnitGUID(...)
@@ -375,7 +375,7 @@ function unlock.GGUnlock()
 	b.UnitCastID = function(...)
 		local spellId1 = select(9, b.UnitCastingInfo(...)) or 0
 		local spellId2 = select(9, b.UnitChannelInfo(...)) or 0
-		local castGUID = b.UnitTarget(select(1,...))
+		local castGUID = b.UnitTarget(select(1, ...))
 		return spellId1, spellId2, castGUID, castGUID
 	end
 	b.GetDirectoryFiles = function(...)
@@ -388,9 +388,9 @@ function unlock.GGUnlock()
 		local sX, sY = gg.WorldToScreen(...)
 		return sX * multiplier, sY * multiplier * -1 + _G.WorldFrame:GetTop()
 		-- local scale, x, y = UIParent:GetEffectiveScale(), gg.WorldToScreen(...)
-        -- local sx = GetScreenWidth() * scale
-        -- local sy = GetScreenHeight() * scale
-        -- return x * sx, y * sy
+		-- local sx = GetScreenWidth() * scale
+		-- local sy = GetScreenHeight() * scale
+		-- return x * sx, y * sy
 	end
 	b.FaceDirection = function(arg)
 		if type(arg) == "number" then
@@ -403,10 +403,10 @@ function unlock.GGUnlock()
 	b.GetObjectWithGUID = function(...)
 		return ...
 	end
-    b.IsHackEnabled = function(...) return false end
-	--------------------------------
+	b.IsHackEnabled = function(...) return false end
+	-- ------------------------------
 	-- math
-	--------------------------------
+	-- ------------------------------
 	b.GetDistanceBetweenPositions = function(X1, Y1, Z1, X2, Y2, Z2)
 		return math.sqrt(math.pow(X2 - X1, 2) + math.pow(Y2 - Y1, 2) + math.pow(Z2 - Z1, 2))
 	end
@@ -441,7 +441,7 @@ function unlock.GGUnlock()
 	b.GetDistanceBetweenObjects = function(unit1, unit2)
 		local X1, Y1, Z1 = b.ObjectPosition(unit1)
 		local X2, Y2, Z2 = b.ObjectPosition(unit2)
-		return math.sqrt((X2-X1)^2 + (Y2-Y1)^2 + (Z2-Z1)^2)
+		return math.sqrt((X2 - X1) ^ 2 + (Y2 - Y1) ^ 2 + (Z2 - Z1) ^ 2)
 	end
 	b.ObjectIsFacing = function(obj1, obj2, degrees)
 		local Facing = b.UnitFacing(obj1)
@@ -451,9 +451,9 @@ function unlock.GGUnlock()
 		degrees = degrees and b.rad(degrees) / 2 or math.pi / 2
 		return ShortestAngle < degrees
 	end
-	--------------------------------
+	-- ------------------------------
 	-- extra APIs
-	--------------------------------
+	-- ------------------------------
 	b.ObjectIsGameObject = function(...)
 		local ObjType = b.ObjectType(...)
 		return ObjType == 8 or ObjType == 11
@@ -461,9 +461,9 @@ function unlock.GGUnlock()
 	b.GetMapId = function()
 		return select(8, GetInstanceInfo())
 	end
-	--------------------------------
+	-- ------------------------------
 	-- missing APIs
-	--------------------------------
+	-- ------------------------------
 	b.IsQuestObject = function(obj)
 		return false
 	end

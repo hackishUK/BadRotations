@@ -5,9 +5,9 @@ function br.ui:createText(parent, text, isCheckbox)
     if isCheckbox == nil then
         isCheckbox = false
     end
-    -------------------------------
-    ----Need to calculate Y Pos----
-    -------------------------------
+    -- -----------------------------
+    -- --Need to calculate Y Pos----
+    -- -----------------------------
     local Y = -5
     for i = 1, #parent.children do
         if parent.children[i].type ~= "Spinner" and parent.children[i].type ~= "Dropdown" then
@@ -15,17 +15,17 @@ function br.ui:createText(parent, text, isCheckbox)
         end
     end
     Y = DiesalTools.Round(Y)
-    --------------------------------------------------
-    --------Create Hidden CheckBox for Spacing--------
-    --------------------------------------------------
+    -- ------------------------------------------------
+    -- ------Create Hidden CheckBox for Spacing--------
+    -- ------------------------------------------------
     if not isCheckbox then -- Bypass for Checkbox element that calls this createText
         local checkBox = br.ui:createCheckbox(parent, text, "")
         checkBox:Disable()
         checkBox:ReleaseTextures()
     end
-    ----------------------------
-    --------Create Label--------
-    ----------------------------
+    -- --------------------------
+    -- ------Create Label--------
+    -- --------------------------
     local label = DiesalGUI:Create("FontString")
 
     label:SetParent(parent.content)
@@ -41,9 +41,9 @@ function br.ui:createText(parent, text, isCheckbox)
     label:SetText(text)
     label:SetWordWrap(false)
 
-    -------------------------
-    --------END Label--------
-    -------------------------
+    -- -----------------------
+    -- ------END Label--------
+    -- -----------------------
 
     return label
 end

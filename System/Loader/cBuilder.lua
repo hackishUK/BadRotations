@@ -1,14 +1,14 @@
 local _, br = ...
 br.loader = {}
 local sep = IsMacClient() and "/" or "\\"
-local class = select(2,br._G.UnitClass('player'))
+local class = select(2, br._G.UnitClass('player'))
 local function getFolderClassName(class)
-    local formatClass = class:sub(1,1):upper()..class:sub(2):lower()
+    local formatClass = class:sub(1, 1):upper() .. class:sub(2):lower()
     if formatClass == "Deathknight" then formatClass = "Death Knight" end
     if formatClass == "Demonhunter" then formatClass = "Demon Hunter" end
     return formatClass
 end
-local function getFolderSpecName(class,specID)
+local function getFolderSpecName(class, specID)
     for k, v in pairs(br.lists.spec[class]) do
         if v == specID then return tostring(k) end
     end
@@ -16,7 +16,7 @@ end
 local function getFilesLocation()
     local wowDir = br._G.GetWoWDirectory() or ""
     if wowDir:match('_retail_') then
-        return  wowDir .. sep .. 'Interface' .. sep .. 'AddOns' .. sep .. br.addonName
+        return wowDir .. sep .. 'Interface' .. sep .. 'AddOns' .. sep .. br.addonName
     end
     return wowDir .. sep .. br.addonName
 end
@@ -25,19 +25,19 @@ local function errorhandler(err)
     return br._G.geterrorhandler()(err)
 end
 
-local function loadFile(profile,file,support)
-    local custom_env = setmetatable({br = br}, {__index=_G})
+local function loadFile(profile, file, support)
+    local custom_env = setmetatable({ br = br }, { __index = _G })
     local func, errorMessage = br._G.loadstring(profile, file);
     if not func then
-        print("Error: "..file.. " Cannot Load.  Please inform devs!")
-        print("Load Error Message: "..tostring(errorMessage))
+        print("Error: " .. file .. " Cannot Load.  Please inform devs!")
+        print("Load Error Message: " .. tostring(errorMessage))
         errorhandler(errorMessage)
     end
     br._G.setfenv(func, custom_env)
     local success, xerrorMessage = xpcall(func, errorhandler);
     if not success then
-        print('Error: '..file..' Cannot Run.  Please inform devs!')
-        print("Run Error Message: "..tostring(xerrorMessage))
+        print('Error: ' .. file .. ' Cannot Run.  Please inform devs!')
+        print("Run Error Message: " .. tostring(xerrorMessage))
         errorhandler(xerrorMessage)
     end
 end
@@ -47,23 +47,23 @@ function br.loader.loadProfiles()
     -- Search each Profile in the Spec Folder
     br._G.wipe(br.rotations)
     local specID = br._G.GetSpecializationInfo(br._G.GetSpecialization())
-    local IDLength = math.floor(math.log10(specID)+1)
-    local folderSpec = getFolderSpecName(class,specID)
+    local IDLength = math.floor(math.log10(specID) + 1)
+    local folderSpec = getFolderSpecName(class, specID)
     local path = getFilesLocation() .. sep .. 'Rotations' .. sep .. getFolderClassName(class) .. sep .. folderSpec .. sep
     -- br._G.print("Path: "..tostring(path))
     local profiles = br._G.GetDirectoryFiles(path .. '*.lua')
     -- br._G.print("Profiles: "..tostring(#profiles))
     for k, file in pairs(profiles) do
         -- br._G.print("Path: "..path..", File: "..file)
-        local profile = br._G.ReadFile(path..file) or ""
+        local profile = br._G.ReadFile(path .. file) or ""
         -- br._G.print("Profile: "..tostring(profile))
-        local start = string.find(profile,"local id = ",1,true) or 0
+        local start = string.find(profile, "local id = ", 1, true) or 0
         local stringEnd = start + IDLength + 10
-        local profileID = math.floor(tonumber(string.sub(profile,start+10,stringEnd)) or 0)
+        local profileID = math.floor(tonumber(string.sub(profile, start + 10, stringEnd)) or 0)
         -- br._G.print("ProfileID: "..tostring(profileID)..", SpecID: "..tostring(specID))
         if profileID == specID then
             -- br._G.print("Loading Profile")
-            loadFile(profile,file,false)
+            loadFile(profile, file, false)
         end
     end
 end
@@ -75,15 +75,16 @@ function br.loadSupport(thisFile) -- Loads support rotation file from Class Fold
     if br.rotations.support[thisFile] then
         br._G.wipe(br.rotations.support[thisFile])
     end
-    local file = thisFile..".lua"
-    local profile = br._G.ReadFile(getFilesLocation()..sep..'Rotations'..sep..getFolderClassName(class)..sep..'Support'..sep..file)
-    loadFile(profile,file,true)
+    local file = thisFile .. ".lua"
+    local profile = br._G.ReadFile(getFilesLocation() ..
+    sep .. 'Rotations' .. sep .. getFolderClassName(class) .. sep .. 'Support' .. sep .. file)
+    loadFile(profile, file, true)
 end
 
 -- Generate Profile API
-function br.loader:new(spec,specName)
+function br.loader:new(spec, specName)
     local loadStart = br._G.debugprofilestop()
-    local self = br.cCharacter:new(tostring(select(1,br._G.UnitClass("player"))))
+    local self = br.cCharacter:new(tostring(select(1, br._G.UnitClass("player"))))
     -- local player = "player" -- if someone forgets ""
     if specName == nil then specName = "Initial" end
 
@@ -96,10 +97,10 @@ function br.loader:new(spec,specName)
     end
 
     if br.selectedProfile ~= nil and br.rotations[spec][br.selectedProfile] then
-        br._G.print("Selecting Previous Rotation: "..br.rotations[spec][br.selectedProfile].name)
+        br._G.print("Selecting Previous Rotation: " .. br.rotations[spec][br.selectedProfile].name)
         self.rotation = br.rotations[spec][br.selectedProfile]
     elseif br.rotations[spec] ~= nil then
-        br._G.print("No Previously Selected Rotation, Defaulting To: "..br.rotations[spec][1].name)
+        br._G.print("No Previously Selected Rotation, Defaulting To: " .. br.rotations[spec][1].name)
         self.rotation = br.rotations[spec][1]
     else
         br._G.print("No Rotations Found!")
@@ -109,7 +110,7 @@ function br.loader:new(spec,specName)
 
     -- Spells From Spell Table
     local function getSpellsForSpec(spec)
-        local playerClass = select(2,br._G.UnitClass('player'))
+        local playerClass = select(2, br._G.UnitClass('player'))
         local specSpells = br.lists.spells[playerClass][spec]
         local sharedClassSpells = br.lists.spells[playerClass]["Shared"]
         local sharedGlobalSpells = br.lists.spells["Shared"]["Shared"]
@@ -155,9 +156,9 @@ function br.loader:new(spec,specName)
         end
     end
 
-    self.items = br.lists.items
+    self.items   = br.lists.items
     self.visions = br.lists.visions
-    self.pets  = br.lists.pets
+    self.pets    = br.lists.pets
 
     -- Get All talents - Thx wildstar
     local function getAllTalents()
@@ -166,12 +167,13 @@ function br.loader:new(spec,specName)
         if not configId then return talents end
         local configInfo = br._G.C_Traits.GetConfigInfo(configId)
         for _, treeId in pairs(configInfo.treeIDs) do
-          local nodes = br._G.C_Traits.GetTreeNodes(treeId)
+            local nodes = br._G.C_Traits.GetTreeNodes(treeId)
             for _, nodeId in pairs(nodes) do
                 local node = br._G.C_Traits.GetNodeInfo(configId, nodeId)
-                local activeid = (node.activeRank > 0 or node.ranksPurchased > 0) and (node.activeEntry and node.activeEntry.entryID or node.entryIDs[1])
+                local activeid = (node.activeRank > 0 or node.ranksPurchased > 0) and
+                (node.activeEntry and node.activeEntry.entryID or node.entryIDs[1])
                 for _, entryID in pairs(node.entryIDs) do
-                    local entryInfo = br._G.C_Traits.GetEntryInfo(configId,entryID)
+                    local entryInfo = br._G.C_Traits.GetEntryInfo(configId, entryID)
                     local definitionInfo = br._G.C_Traits.GetDefinitionInfo(entryInfo.definitionID)
                     if definitionInfo.spellID ~= nil then
                         if talents[definitionInfo.spellID] == nil then talents[definitionInfo.spellID] = {} end
@@ -254,13 +256,13 @@ function br.loader:new(spec,specName)
         -- Build Talent Info
         local allTalents = getTalentInfo()
         if self.talent == nil then self.talent = {} end
-        for k,v in pairs(self.spell.talents) do
-            br.api.talent(self.talent,k,v,allTalents,self.spell)
+        for k, v in pairs(self.spell.talents) do
+            br.api.talent(self.talent, k, v, allTalents, self.spell)
         end
 
         if not self.spell.abilities then return end
         -- Build Artifact Info
-        for k,v in pairs(self.spell.artifacts) do
+        for k, v in pairs(self.spell.artifacts) do
             if not self.artifact[k] then self.artifact[k] = {} end
             local artifact = self.artifact[k]
 
@@ -288,14 +290,14 @@ function br.loader:new(spec,specName)
 
         -- Conduits
         if self.conduit == nil then self.conduit = {} end
-        for k,v in pairs(self.spell.conduits) do
+        for k, v in pairs(self.spell.conduits) do
             if self.conduit[k] == nil then self.conduit[k] = {} end
             -- br.api.conduit(self.conduit,k,v)
         end
 
         -- Animas
         if self.anima == nil then self.anima = {} end
-        for k,v in pairs(self.spell.animas) do
+        for k, v in pairs(self.spell.animas) do
             if self.anima[k] == nil then self.anima[k] = {} end
             -- br.api.animas(self.anima[k],v)
         end
@@ -312,7 +314,7 @@ function br.loader:new(spec,specName)
         -- Runeforge
         if self.runeforge == nil then self.runeforge = {} end
         if self.spell.runeforges ~= nil then
-            for k,v in pairs(self.spell.runeforges) do
+            for k, v in pairs(self.spell.runeforges) do
                 if self.runeforge[k] == nil then self.runeforge[k] = {} end
                 -- br.api.runeforge(self.runeforge,k,v)
             end
@@ -320,128 +322,143 @@ function br.loader:new(spec,specName)
 
         -- Update Power
         if not self.power then self.power = {} end
-        self.power.list     = {
-            mana            = 0, --SPELL_POWER_MANA, --0,
-            rage            = 1, --SPELL_POWER_RAGE, --1,
-            focus           = 2, --SPELL_POWER_FOCUS, --2,
-            energy          = 3, --SPELL_POWER_ENERGY, --3,
-            comboPoints     = 4, --SPELL_POWER_COMBO_POINTS, --4,
-            runes           = 5, --SPELL_POWER_RUNES, --5,
-            runicPower      = 6, --SPELL_POWER_RUNIC_POWER, --6,
-            soulShards      = 7, --SPELL_POWER_SOUL_SHARDS, --7,
-            astralPower     = 8, --SPELL_POWER_LUNAR_POWER, --8,
-            holyPower       = 9, --SPELL_POWER_HOLY_POWER, --9,
-            altPower        = 10, --SPELL_POWER_ALTERNATE_POWER, --10,
-            maelstrom       = 11, --SPELL_POWER_MAELSTROM, --11,
-            chi             = 12, --SPELL_POWER_CHI, --12,
-            insanity        = 13, --SPELL_POWER_INSANITY, --13,
-            obsolete        = 14,
-            obsolete2       = 15,
-            arcaneCharges   = 16, --SPELL_POWER_ARCANE_CHARGES, --16,
-            fury            = 17, --SPELL_POWER_FURY, --17,
-            pain            = 18, --SPELL_POWER_PAIN, --18,
-            essence         = 19, --SPELL_POWER_ESSENCE, -- 19,
+        self.power.list = {
+            mana          = 0,    --SPELL_POWER_MANA, --0,
+            rage          = 1,    --SPELL_POWER_RAGE, --1,
+            focus         = 2,    --SPELL_POWER_FOCUS, --2,
+            energy        = 3,    --SPELL_POWER_ENERGY, --3,
+            comboPoints   = 4,    --SPELL_POWER_COMBO_POINTS, --4,
+            runes         = 5,    --SPELL_POWER_RUNES, --5,
+            runicPower    = 6,    --SPELL_POWER_RUNIC_POWER, --6,
+            soulShards    = 7,    --SPELL_POWER_SOUL_SHARDS, --7,
+            astralPower   = 8,    --SPELL_POWER_LUNAR_POWER, --8,
+            holyPower     = 9,    --SPELL_POWER_HOLY_POWER, --9,
+            altPower      = 10,   --SPELL_POWER_ALTERNATE_POWER, --10,
+            maelstrom     = 11,   --SPELL_POWER_MAELSTROM, --11,
+            chi           = 12,   --SPELL_POWER_CHI, --12,
+            insanity      = 13,   --SPELL_POWER_INSANITY, --13,
+            obsolete      = 14,
+            obsolete2     = 15,
+            arcaneCharges = 16,   --SPELL_POWER_ARCANE_CHARGES, --16,
+            fury          = 17,   --SPELL_POWER_FURY, --17,
+            pain          = 18,   --SPELL_POWER_PAIN, --18,
+            essence       = 19,   --SPELL_POWER_ESSENCE, -- 19,
         }
         for k, v in pairs(self.power.list) do
             if not self.power[k] then self.power[k] = {} end
-            br.api.power(self.power[k],v)
+            br.api.power(self.power[k], v)
         end
 
         -- Make Buff Functions from br.api.buffs
-        for k,v in pairs(self.spell.buffs) do
+        for k, v in pairs(self.spell.buffs) do
             if k ~= "rollTheBones" then
                 if self.buff == nil then self.buff = {} end
                 if self.buff[k] == nil then self.buff[k] = {} end
                 if k == "bloodLust" then v = br.getLustID() end
-                br.api.buffs(self.buff[k],v)
+                br.api.buffs(self.buff[k], v)
             end
         end
         -- Make Debuff Functions from br.api.debuffs
-        for k,v in pairs(self.spell.debuffs) do
+        for k, v in pairs(self.spell.debuffs) do
             if self.debuff == nil then self.debuff = {} end
             if self.debuff[k] == nil then self.debuff[k] = {} end
-            br.api.debuffs(self.debuff[k],k,v)
+            br.api.debuffs(self.debuff[k], k, v)
         end
 
         -- Make Units Functions from br.api.units
-        if self.units == nil then self.units = {} br.api.units(self) end
+        if self.units == nil then
+            self.units = {}
+            br.api.units(self)
+        end
 
         -- Make Enemies Functions from br.api.enemies
-        if self.enemies == nil then self.enemies = {} br.api.enemies(self) end
+        if self.enemies == nil then
+            self.enemies = {}
+            br.api.enemies(self)
+        end
 
         -- Make Unit Functions from br.api.unit
-        if self.unit == nil then self.unit = {} br.api.unit(self) end
+        if self.unit == nil then
+            self.unit = {}
+            br.api.unit(self)
+        end
 
         -- Make Pet Functions from br.api.pets
         if self.pets ~= nil then
-            for k,v in pairs(self.pets) do
+            for k, v in pairs(self.pets) do
                 if self.pet[k] == nil then self.pet[k] = {} end
                 local pet = self.pet[k]
-                br.api.pets(pet,k,v,self)
+                br.api.pets(pet, k, v, self)
             end
         end
 
         -- Cycle through Items List
-        for k,v in pairs(self.items) do --self.spell.items) do
-            if self.charges         == nil then self.charges    = {} end -- Item Charge Functions
-            if self.charges[k]      == nil then self.charges[k] = {} end -- Item Charge Subtables
-            if self.cd              == nil then self.cd         = {} end -- Item Cooldown Functions
-            if self.equiped         == nil then self.equiped    = {} end -- Use Item Debugging
-            if self.equiped.socket  == nil then self.equiped.socket = {} end -- Item Socket Info
-            if self.has             == nil then self.has        = {} end -- Item In Bags
-            if self.use             == nil then self.use        = {} end -- Use Item Functions
-            if self.use.able        == nil then self.use.able   = {} end -- Useable Item Check Functions
+        for k, v in pairs(self.items) do                                     --self.spell.items) do
+            if self.charges == nil then self.charges = {} end                -- Item Charge Functions
+            if self.charges[k] == nil then self.charges[k] = {} end          -- Item Charge Subtables
+            if self.cd == nil then self.cd = {} end                          -- Item Cooldown Functions
+            if self.equiped == nil then self.equiped = {} end                -- Use Item Debugging
+            if self.equiped.socket == nil then self.equiped.socket = {} end  -- Item Socket Info
+            if self.has == nil then self.has = {} end                        -- Item In Bags
+            if self.use == nil then self.use = {} end                        -- Use Item Functions
+            if self.use.able == nil then self.use.able = {} end              -- Useable Item Check Functions
 
-            br.api.items(self.cd,k,v,"cd")
+            br.api.items(self.cd, k, v, "cd")
 
-            br.api.items(self.charges,k,v,"charges")
+            br.api.items(self.charges, k, v, "charges")
 
-            br.api.items(self.equiped,k,v,"equiped")
+            br.api.items(self.equiped, k, v, "equiped")
 
-            br.api.items(self.has,k,v,"has")
+            br.api.items(self.has, k, v, "has")
 
-            br.api.items(self.use,k,v,"use")
+            br.api.items(self.use, k, v, "use")
 
             br.getHeirloomNeck()
         end
 
         -- Cycle through Abilities List
-        for spell,id in pairs(self.spell.abilities) do
-            if self.charges             == nil then self.charges            = {} end    -- Spell Charge Functions
-            if self.cd                  == nil then self.cd                 = {} end    -- Spell Cooldown Functions
+        for spell, id in pairs(self.spell.abilities) do
+            if self.charges == nil then self.charges = {} end                        -- Spell Charge Functions
+            if self.cd == nil then self.cd = {} end                                  -- Spell Cooldown Functions
 
             -- Build Cast Funcitons
-            br.api.cast(self,spell,id)
+            br.api.cast(self, spell, id)
             -- Build Spell Charges
-            br.api.spells(self.charges,spell,id,"charges")
+            br.api.spells(self.charges, spell, id, "charges")
             -- Build Spell Cooldown
-            br.api.cd(self,spell,id)
+            br.api.cd(self, spell, id)
             -- build Spell Known
-            br.api.spells(self.spell,spell,id,"known")
+            br.api.spells(self.spell, spell, id, "known")
         end
 
         -- Make UI Functions from br.api.ui
-        if self.ui == nil then self.ui = {} br.api.ui(self) end
+        if self.ui == nil then
+            self.ui = {}
+            br.api.ui(self)
+        end
 
         -- Make Action List Functions from br.api.module
-        if self.module == nil then self.module = {} br.api.module(self) end
+        if self.module == nil then
+            self.module = {}
+            br.api.module(self)
+        end
     end
 
     if spec == br._G.GetSpecializationInfo(br._G.GetSpecialization()) and (self.talent == nil or self.cast == nil) then
         getSpellsForSpec(spec); --[[getTalentInfo(); getAzeriteTraitInfo();]] getFunctions(); br.updatePlayerInfo = false
     end
-    ------------------
-    --- OOC UPDATE ---
-    ------------------
+    -- ----------------
+    -- - OOC UPDATE ---
+    -- ----------------
 
     function self.updateOOC()
         -- Call baseUpdateOOC()
         self.baseUpdateOOC()
     end
 
-    --------------
-    --- UPDATE ---
-    --------------
+    -- ------------
+    -- - UPDATE ---
+    -- ------------
 
     function self.update()
         if spec == br._G.GetSpecializationInfo(br._G.GetSpecialization()) then
@@ -462,9 +479,9 @@ function br.loader:new(spec,specName)
         end
     end
 
-    ---------------
-    --- BLEEDS  ---
-    ---------------
+    -- -------------
+    -- - BLEEDS  ---
+    -- -------------
     function self.getBleeds()
         if spec == 103 or spec == 259 then
             for k, _ in pairs(self.debuff) do
@@ -473,7 +490,7 @@ function br.loader:new(spec,specName)
                     for l, _ in pairs(self.debuff[k].bleed) do
                         if --[[not UnitAffectingCombat("player") or]] br.GetUnitIsDeadOrGhost(l) then
                             self.debuff[k].bleed[l] = nil
-                        elseif not self.debuff[k].exists(l,"EXACT") then
+                        elseif not self.debuff[k].exists(l, "EXACT") then
                             self.debuff[k].bleed[l] = 0
                         end
                     end
@@ -497,15 +514,15 @@ function br.loader:new(spec,specName)
         end
     end
 
-    ---------------
-    --- TOGGLES ---
-    ---------------
+    -- -------------
+    -- - TOGGLES ---
+    -- -------------
 
     function self.getToggleModes()
-        for k,_ in pairs(br.data.settings[br.selectedSpec].toggles) do
-            local toggle = k:sub(1,1):lower()..k:sub(2)
+        for k, _ in pairs(br.data.settings[br.selectedSpec].toggles) do
+            local toggle = k:sub(1, 1):lower() .. k:sub(2)
             self.ui.mode[toggle] = br.data.settings[br.selectedSpec].toggles[k]
-            br.UpdateToggle(k,0.25)
+            br.UpdateToggle(k, 0.25)
         end
     end
 
@@ -519,9 +536,9 @@ function br.loader:new(spec,specName)
         end
     end
 
-    ---------------
-    --- OPTIONS ---
-    ---------------
+    -- -------------
+    -- - OPTIONS ---
+    -- -------------
 
     -- Class options
     -- Options which every Rogue should have
@@ -539,7 +556,7 @@ function br.loader:new(spec,specName)
     --         end
     --     end
     -- end
-     -- Creates the option/profile window
+    -- Creates the option/profile window
     local names
     function self.createOptions()
         -- if br.ui:closeWindow("profile")
@@ -555,7 +572,7 @@ function br.loader:new(spec,specName)
         -- Get the names of all profiles and create rotation dropdown
         if names == nil then names = {} end
         table.wipe(names)
-        for i=1,#br.rotations[spec] do
+        for i = 1, #br.rotations[spec] do
             local thisName = br.rotations[spec][i].name
             br._G.tinsert(names, thisName)
         end
@@ -584,7 +601,7 @@ function br.loader:new(spec,specName)
         --
         -- -- Only add profile pages if they are found
         -- if profileTable then
-            br.insertTableIntoTable(optionTable, self.rotation.options())
+        br.insertTableIntoTable(optionTable, self.rotation.options())
         -- end
 
         -- Create pages dropdown
@@ -594,9 +611,9 @@ function br.loader:new(spec,specName)
         br.ui:checkWindowStatus("profile")
     end
 
-    ------------------------
-    --- CUSTOM FUNCTIONS ---
-    ------------------------
+    -- ----------------------
+    -- - CUSTOM FUNCTIONS ---
+    -- ----------------------
 
     function br.useAoE()
         local rotation = self.ui.mode.rotation
@@ -648,8 +665,8 @@ function br.loader:new(spec,specName)
         end
     end
 
-     function br.useRollForOne()
-        if self.ui.mode.RollForOne == 1  then
+    function br.useRollForOne()
+        if self.ui.mode.RollForOne == 1 then
             return true
         else
             return false
@@ -667,14 +684,14 @@ function br.loader:new(spec,specName)
     function br.mantleDuration()
         if br.hasEquiped(144236) then
             --if br.player.buff.masterAssassinsInitiative.remain("player") > 100 or br.player.buff.masterAssassinsInitiative.remain("player") < 0 then
-            if br.player.buff.masterAssassinsInitiative.exists("player") and (br.getBuffRemain("player",235027) > 100 or br.getBuffRemain("player",235027) < 100) then
+            if br.player.buff.masterAssassinsInitiative.exists("player") and (br.getBuffRemain("player", 235027) > 100 or br.getBuffRemain("player", 235027) < 100) then
                 return br.player.cd.global.remain() + 5
             else
                 --return br.player.buff.masterAssassinsInitiative.remain("player")
-                if br.getBuffRemain("player",235027) >= 0 and br.getBuffRemain("player",235027) < 0.1 then
+                if br.getBuffRemain("player", 235027) >= 0 and br.getBuffRemain("player", 235027) < 0.1 then
                     return 0
                 else
-                    return br.getBuffRemain("player",235027)
+                    return br.getBuffRemain("player", 235027)
                 end
             end
         else
@@ -682,17 +699,17 @@ function br.loader:new(spec,specName)
         end
     end
 
-
-
     function br.BleedTarget()
-        return (br.player.debuff.garrote.exists("target") and 1 or 0) + (br.player.debuff.rupture.exists("target") and 1 or 0) + (br.player.debuff.internalBleeding.exists("target") and 1 or 0)
+        return (br.player.debuff.garrote.exists("target") and 1 or 0) +
+        (br.player.debuff.rupture.exists("target") and 1 or 0) +
+        (br.player.debuff.internalBleeding.exists("target") and 1 or 0)
     end
 
     -- Debugging
-	br.debug.cpu:updateDebug(loadStart,"rotation.loadTime")
-    -----------------------------
-    --- CALL CREATE FUNCTIONS ---
-    -----------------------------
+    br.debug.cpu:updateDebug(loadStart, "rotation.loadTime")
+    -- ---------------------------
+    -- - CALL CREATE FUNCTIONS ---
+    -- ---------------------------
     -- Return
     return self
 end --End function

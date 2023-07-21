@@ -139,8 +139,10 @@ function br.isQuestObject(object) --Ty Ssateneth
 		objectID == 325662 or objectID == 325659 or objectID == 325660 or objectID == 325661 or objectID == 325663 or
 		objectID == 325664 or objectID == 325665 or objectID == 325666 or objectID == 325667 or objectID == 325668 or
 		-- mechagon chests
-		objectID == 151166 -- algan units
-	then return true end
+		objectID == 151166           -- algan units
+	then
+		return true
+	end
 	local glow = br.getItemGlow(object) --or select(2, CanLootUnit(object)) or questObj == 12
 	if glow then
 		return true
@@ -188,7 +190,7 @@ local function QuestEventHandler(_, event, ...)
 	if br._G.GetObjectWithGUID then
 		local func = eventFunctions[event]
 		if (func) then
-			---@diagnostic disable-next-line: redundant-parameter
+			-- -@diagnostic disable-next-line: redundant-parameter
 			func(event, ...)
 		else
 			br._G.print("no registered function for event " .. (event or "unknown event"))

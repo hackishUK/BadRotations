@@ -1,5 +1,5 @@
 local _, br = ...
---- Character Class
+-- - Character Class
 -- All classes inherit from the base class /cCharacter.lua
 br.cCharacter = {}
 -- Creates new character with given class
@@ -18,15 +18,15 @@ function br.cCharacter:new(class)
 	self.class = select(2, br._G.UnitClass("player")) -- Class
 	-- self.cd = {} -- Cooldowns
 	-- self.charges = {} -- Number of charges
-	self.currentPet = "None" -- Current Pet
-	self.dynLastUpdate = 0 -- Timer variable to reduce Dynamic Target updating
-	self.dynTargetTimer = 0.5 -- Timer to reduce Dynamic Target updating (1/X = calls per second)
+	self.currentPet = "None"                                -- Current Pet
+	self.dynLastUpdate = 0                                  -- Timer variable to reduce Dynamic Target updating
+	self.dynTargetTimer = 0.5                               -- Timer to reduce Dynamic Target updating (1/X = calls per second)
 	--self.enemies = {} -- Number of Enemies around player (must be overwritten by cCLASS or cSPEC)
-	self.essence = {} -- Azerite Essence
+	self.essence = {}                                       -- Azerite Essence
 	-- self.equiped = {} -- Item Equips
-	self.gcd = 1.5 -- Global Cooldown
-	self.gcdMax = 1.5 -- GLobal Max Cooldown
-	self.glyph = {} -- Glyphs
+	self.gcd = 1.5                                          -- Global Cooldown
+	self.gcdMax = 1.5                                       -- GLobal Max Cooldown
+	self.glyph = {}                                         -- Glyphs
 	self.faction = select(1, br._G.UnitFactionGroup("player")) -- Faction non-localised name
 	self.flask = {}
 	self.flask.wod = {
@@ -57,27 +57,27 @@ function br.cCharacter:new(class)
 		strengthLow = 251839,
 		strengthBig = 251839
 	}
-	self.functions = {} -- Custom Profile Functions
-	self.health = 100 -- Health Points in %
-	self.ignoreCombat = false -- Ignores combat status if set to true
-	self.inCombat = false -- if is in combat
+	self.functions = {}                          -- Custom Profile Functions
+	self.health = 100                            -- Health Points in %
+	self.ignoreCombat = false                    -- Ignores combat status if set to true
+	self.inCombat = false                        -- if is in combat
 	self.instance = select(2, br._G.IsInInstance()) -- Get type of group we are in (none, party, instance, raid, etc)
-	self.level = 0 -- Player Level
-	self.moving = false -- Moving event
-	self.opener = {} -- Opener flag tracking, reduce global vars
-	self.pandemic = {} -- Tracking Base Duration per Unit/Debuff
-	self.perk = {} -- Perk Table
-	self.petId = 0 -- Current Pet Id
-	self.pet = {} -- Pet Information Table
-	self.pet.list = {} -- Table of Pets
-	self.potion = {} -- Potion Table
-	self.primaryStat = nil -- Contains the primary Stat: Strength, Agility or Intellect
-	self.profile = "None" -- Profile Name
-	self.queue = {} -- Table for Queued Spells
+	self.level = 0                               -- Player Level
+	self.moving = false                          -- Moving event
+	self.opener = {}                             -- Opener flag tracking, reduce global vars
+	self.pandemic = {}                           -- Tracking Base Duration per Unit/Debuff
+	self.perk = {}                               -- Perk Table
+	self.petId = 0                               -- Current Pet Id
+	self.pet = {}                                -- Pet Information Table
+	self.pet.list = {}                           -- Table of Pets
+	self.potion = {}                             -- Potion Table
+	self.primaryStat = nil                       -- Contains the primary Stat: Strength, Agility or Intellect
+	self.profile = "None"                        -- Profile Name
+	self.queue = {}                              -- Table for Queued Spells
 	self.race = select(2, br._G.UnitRace("player")) -- Race as non-localised name (undead = Scourge) !
-	self.racial = 0 -- Contains racial spell id
-	self.selectedRotation = 1 -- Default: First avaiable rotation
-	self.rotation = {} -- List of Rotations
+	self.racial = 0                              -- Contains racial spell id
+	self.selectedRotation = 1                    -- Default: First avaiable rotation
+	self.rotation = {}                           -- List of Rotations
 	-- self.spell = {} -- Spells all classes may have (e.g. Racials, Mass Ressurection)
 	-- self.talent = {} -- Talents
 	self.timeToMax = 0 -- Time To Max Power
@@ -289,9 +289,9 @@ function br.cCharacter:new(class)
 		end
 	end
 
-	---------------
-	--- OPTIONS ---
-	---------------
+	-- -------------
+	-- - OPTIONS ---
+	-- -------------
 
 	-- Character options
 	-- Options which every Class should have
@@ -302,7 +302,8 @@ function br.cCharacter:new(class)
 		br.ui:createCheckbox(section_base, "Cast Debug", "Shows information about how the bot is casting.")
 		br.ui:createCheckbox(section_base, "Ignore Combat", "Checking this will make BR think it is always in combat")
 		br.ui:createCheckbox(section_base, "Mute Queue", "Mute messages from Smart Queue and Queue Casting")
-		br.ui:createDropdown(section_base, "Pause Mode", br.dropOptions.Toggle, 2, "Define a key which pauses the rotation.")
+		br.ui:createDropdown(section_base, "Pause Mode", br.dropOptions.Toggle, 2,
+			"Define a key which pauses the rotation.")
 		br.ui:checkSectionState(section_base)
 	end
 
@@ -352,20 +353,20 @@ function br.cCharacter:new(class)
 							}
 							if itemInfo.itemType == "Potion" and self.level >= itemInfo.minLevel then -- Is the item a Potion and am I level to use it?
 								local potionList = {
-									{ ptype = "action", effect = "Action" },
-									{ ptype = "agility", effect = "Agility" },
-									{ ptype = "armor", effect = "Armor" },
-									{ ptype = "breathing", effect = "Underwater" },
-									{ ptype = "health", effect = "Healing" },
-									{ ptype = "intellect", effect = "Intellect" },
-									{ ptype = "invis", effect = "Invisibility" },
-									{ ptype = "mana", effect = "Mana" },
-									{ ptype = "rage", effect = "Rage" },
-									{ ptype = "rejuve", effect = "Rejuvenation" },
-									{ ptype = "speed", effect = "Swiftness" },
-									{ ptype = "strength", effect = "Strength" },
+									{ ptype = "action",      effect = "Action" },
+									{ ptype = "agility",     effect = "Agility" },
+									{ ptype = "armor",       effect = "Armor" },
+									{ ptype = "breathing",   effect = "Underwater" },
+									{ ptype = "health",      effect = "Healing" },
+									{ ptype = "intellect",   effect = "Intellect" },
+									{ ptype = "invis",       effect = "Invisibility" },
+									{ ptype = "mana",        effect = "Mana" },
+									{ ptype = "rage",        effect = "Rage" },
+									{ ptype = "rejuve",      effect = "Rejuvenation" },
+									{ ptype = "speed",       effect = "Swiftness" },
+									{ ptype = "strength",    effect = "Strength" },
 									{ ptype = "versatility", effect = "Versatility" },
-									{ ptype = "waterwalk", effect = "Water Walking" }
+									{ ptype = "waterwalk",   effect = "Water Walking" }
 								}
 								for y = 1, #potionList do --Look for and add to right potion table
 									local potionEffect = potionList[y].effect

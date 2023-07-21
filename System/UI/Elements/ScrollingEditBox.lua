@@ -10,9 +10,9 @@ function br.ui:createScrollingEditBox(parent, text, content, tooltip, width, hei
     if height == nil then
         height = 50
     end
-    -------------------------------
-    ----Need to calculate Y Pos----
-    -------------------------------
+    -- -----------------------------
+    -- --Need to calculate Y Pos----
+    -- -----------------------------
     local Y = -5
     for i = 1, #parent.children do
         if parent.children[i].type ~= "Spinner" and parent.children[i].type ~= "Dropdown" then
@@ -21,9 +21,9 @@ function br.ui:createScrollingEditBox(parent, text, content, tooltip, width, hei
     end
     Y = DiesalTools.Round(Y)
 
-    -------------------------------
-    --------Create CheckBox--------
-    -------------------------------
+    -- -----------------------------
+    -- ------Create CheckBox--------
+    -- -----------------------------
     local checkBox = br.ui:createCheckbox(parent, text, tooltip)
     if hideCheckbox then
         local check = br.data.settings[br.selectedSpec][br.selectedProfile][text .. "Check"]
@@ -70,11 +70,11 @@ function br.ui:createScrollingEditBox(parent, text, content, tooltip, width, hei
             offset = 0
         }
     }
-    -------------------------------
+    -- -----------------------------
 
-    ------------------------------
-    --------Create input--------
-    ------------------------------
+    -- ----------------------------
+    -- ------Create input--------
+    -- ----------------------------
     local input = DiesalGUI:Create("ScrollingEditBox")
     parent:AddChild(input)
 
@@ -82,11 +82,11 @@ function br.ui:createScrollingEditBox(parent, text, content, tooltip, width, hei
     input:SetPoint("TOPLEFT", parent.content, "TOPLEFT", 5, Y - 14)
     input:SetStylesheet(inputStyleSheet)
 
-    input.settings.contentPadding = {1, 1, 1, 1}
+    input.settings.contentPadding = { 1, 1, 1, 1 }
 
-    --------------
-    ---BR Stuff---
-    --------------
+    -- ------------
+    -- -BR Stuff---
+    -- ------------
     -- Read number from config or set default
     if br.data.settings[br.selectedSpec][br.selectedProfile][text .. "EditBox"] == nil then
         br.data.settings[br.selectedSpec][br.selectedProfile][text .. "EditBox"] = content
@@ -96,9 +96,9 @@ function br.ui:createScrollingEditBox(parent, text, content, tooltip, width, hei
     input:SetWidth(width)
     input:SetHeight(height)
 
-    ------------------
-    ------Events------
-    ------------------
+    -- ----------------
+    -- ----Events------
+    -- ----------------
     -- Event: OnValueChange
     input:SetEventListener(
         "OnTextChanged",
@@ -107,13 +107,13 @@ function br.ui:createScrollingEditBox(parent, text, content, tooltip, width, hei
             input.settings.text = input.editBox:GetText()
         end
     )
-    ----------------------
-    ------END Events------
-    ----------------------
+    -- --------------------
+    -- ----END Events------
+    -- --------------------
     input:ApplySettings()
-    ---------------------------
-    --------END input--------
-    ---------------------------
+    -- -------------------------
+    -- ------END input--------
+    -- -------------------------
     return input, checkBox
 end
 
