@@ -1,12 +1,66 @@
--- define br global that will hold the bot global background features
+--[=[
+	@class br
+	`br` is the global table which implements the BadRotations API.
+	Due to its unavoidable size, complexity, and mutability, its
+	members are varied and logically defined within many files.
+
+	In this documentation, *some* members may be left undocumented
+	for brevity. This is not to say that they are not important, but
+	rather that they are internal or not intended for public use. If
+	you find yourself using an undocumented member, please consider
+	opening an issue on GitHub to request that it be documented.
+]=]
 local _, br = ...
 br._G = setmetatable({}, {__index = _G})
+
+--[=[
+	@prop unlock table
+	@within br
+	@tag unlocking
+	`br.unlock` is a table containing Lua unlocker compatibility mappings
+	and functions. It is implemented for each unlocker in `/Unlockers`.
+]=]
 br.unlock = {}
+--[=[
+	@prop data table
+	@within br
+	TODO
+]=]
 br.data = {}
+--[=[
+	@prop data.settings table
+	@within br
+	TODO
+]=]
 br.data.settings = {}
+--[=[
+	@prop addonName string
+	@within br
+	@ignore
+]=]
 br.addonName = "BadRotations"
+--[=[
+	@interface castPosition
+	@within br
+	.x number -- x coordinate of the cast position
+	.y number -- y coordinate of the cast position
+	.z number -- z coordinate of the cast position
+
+	TODO
+]=]
 br.castPosition = {x = 0, y = 0, z = 0}
 br.commandHelp = {}
+--[=[
+	@prop deadPet boolean
+	@within br
+
+	Global boolean to conditionally handle when the player's pet is dead.
+	```lua
+	if br.deadPet and cast.able.revivePet() then
+		cast.revivePet("player")
+	end
+	```
+]=]
 br.deadPet = false
 -- developers debug, use /run br.data.settings[br.selectedSpec].toggles["isDebugging"] = true
 br.debug = {}
