@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[490],{63891:s=>{s.exports=JSON.parse('{"sourceUrl":"https://github.com/CuteOne/BadRotations/blob/master","baseUrl":"/BadRotations/","classOrder":[],"apiCategories":[]}')}}]);
