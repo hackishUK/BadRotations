@@ -1,0 +1,53 @@
+title = "BadRotations DevDocs"
+gitRepoUrl = "https://github.com/CuteOne/BadRotations"
+
+gitSourceBranch = "master"
+changelog = false
+
+[docusaurus]
+onBrokenLinks = "throw"
+onBrokenMarkdownLinks = "warn"
+favicon = "favicon.ico"
+
+organizationName = "BadRotations Contributors"
+projectName = "BadRotations"
+url = "https://hackishuk.github.io"
+baseUrl = "/BadRotations"
+tagline = "A reference for building your own combat routine!"
+
+[footer]
+style = "dark"
+copyright = "Copyright © 2023 BadRotations Contributors"
+
+[[navbar.items]]
+href = "https://discord.gg/VE7V7Mz"
+label = "Discord"
+position = "right"
+
+# [[classOrder]]
+# section = "Meta"
+# classes = ["br", "br.api"]
+
+# [[classOrder]]
+# section = "Casting"
+# classes = ["br.api.cast"]
+
+# [[classOrder]]
+# section = "Units"
+# classes = ["unit"]
+
+[home]
+enabled = true
+includeReadme = false
+
+[[home.features]]
+title = "Open Source"
+description = "BadRotations is the oldest active & purely open source combat routine engines for World of Warcraft."
+
+[[home.features]]
+title = "Easy to Use API"
+description = "This API reference makes it simple for you to create your own expert custom combat routines and behaviors."
+
+[[home.features]]
+title = "Highly Integrable"
+description = "Unlocker support is trivial to add given primitive APIs or active unlocker developers. There's no excuse!"
