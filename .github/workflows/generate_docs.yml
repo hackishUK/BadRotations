@@ -21,6 +21,6 @@ jobs:
           git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
           git config --global user.email "actions@users.noreply.github.com"
           git config --global user.name "Docs Bot"
-          moonwave build --publish
+          moonwave build --publish --code "BadRotations.lua" "System"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
